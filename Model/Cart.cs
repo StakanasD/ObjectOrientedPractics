@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ObjectOrientedPractics.Model
 {
     /// <summary>
-    /// Корзина товаров покупателя.
+    /// Класс корзины товаров покупателя.
     /// </summary>
     public class Cart
     {
         private List<Item> _items;
 
         /// <summary>
-        /// Список товаров в корзине.
+        /// Возвращает и задает список товаров в корзине.
         /// </summary>
         public List<Item> Items
         {
@@ -23,26 +19,30 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Общая стоимость всех товаров корзины.
+        /// Возвращает общую стоимость всех товаров в корзине.
         /// </summary>
         public double Amount
         {
             get
             {
                 if (_items == null || _items.Count == 0)
+                {
                     return 0.0;
+                }
 
                 double amount = 0.0;
 
                 foreach (Item item in _items)
+                {
                     amount += item.Cost;
+                }
 
                 return amount;
             }
         }
 
         /// <summary>
-        /// Создает пустую корзину.
+        /// Создает пустую корзину товаров.
         /// </summary>
         public Cart()
         {

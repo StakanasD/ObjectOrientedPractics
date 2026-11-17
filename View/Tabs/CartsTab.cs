@@ -1,187 +1,226 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
+using ObjectOrientedPractics.Model.Enums;
+using ObjectOrientedPractics.Services;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
+    /// <summary>
+    /// Вкладка управления корзинами покупателей и оформления заказов.
+    /// </summary>
     public partial class CartsTab : UserControl
     {
+        private List<Item> _items = new List<Item>();
+        private List<Customer> _customers = new List<Customer>();
+        private Customer? _currentCustomer;
+
+        /// <summary>
+        /// Возвращает и задает список доступных товаров магазина.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public List<Item> Items
+        {
+            get { return _items; }
+            set { _items = value ?? new List<Item>(); }
+        }
+
+        /// <summary>
+        /// Возвращает и задает список покупателей магазина.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public List<Customer> Customers
+        {
+            get { return _customers; }
+            set { _customers = value ?? new List<Customer>(); }
+        }
+
+        /// <summary>
+        /// Возвращает и задает текущего выбранного покупателя.
+        /// </summary>
+        private Customer? CurrentCustomer
+        {
+            get { return _currentCustomer; }
+            set
+            {
+                _currentCustomer = value;
+                UpdateCartListBox();
+            }
+        }
+
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="CartsTab"/>.
+        /// </summary>
         public CartsTab()
         {
             InitializeComponent();
         }
 
-        private List<Item> _items;
-        private List<Customer> _customers;
-        private Customer _currentCustomer;
-
-        public List<Item> Items
-        {
-            get { return _items; }
-            set { _items = value; }
-        }
-
-        public List<Customer> Customers
-        {
-            get { return _customers; }
-            set { _customers = value; }
-        }
-
+        /// <summary>
+        /// Обновляет списки товаров, покупателей и содержимое корзины при переключении на вкладку.
+        /// </summary>
         public void RefreshData()
         {
             UpdateItemsListBox();
             UpdateCustomersComboBox();
-            UpdateCartListBox();
+            CurrentCustomer = null;
         }
 
         private void UpdateItemsListBox()
         {
             CartItemsListBox.Items.Clear();
 
-            if (_items == null) return;
+            if (_items == null)
+            {
+                return;
+            }
 
             foreach (Item item in _items)
+            {
                 CartItemsListBox.Items.Add(item);
+            }
         }
 
         private void UpdateCustomersComboBox()
         {
             CartCustomerComboBox.Items.Clear();
+            CartCustomerComboBox.SelectedIndex = -1;
 
-            if (_customers == null) return;
+            if (_customers == null)
+            {
+                return;
+            }
 
             foreach (Customer customer in _customers)
+            {
                 CartCustomerComboBox.Items.Add(customer);
+            }
         }
 
         private void UpdateCartListBox()
         {
             CartListBox.Items.Clear();
 
-            if (_currentCustomer == null || _currentCustomer.Cart == null)
+            if (CurrentCustomer == null || CurrentCustomer.Cart == null)
             {
-                AmountLabel.Text = "0.0";
+                AmountLabel.Text = 0.0.ToString("N2");
                 return;
             }
 
-            foreach (Item item in _currentCustomer.Cart.Items)
+            foreach (Item item in CurrentCustomer.Cart.Items)
+            {
                 CartListBox.Items.Add(item);
+            }
 
-            AmountLabel.Text = _currentCustomer.Cart.Amount.ToString();
+            AmountLabel.Text = CurrentCustomer.Cart.Amount.ToString("N2");
         }
 
         private void CartCustomerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currentCustomer = CartCustomerComboBox.SelectedItem as Customer;
-
-            UpdateCartListBox();
+            CurrentCustomer = CartCustomerComboBox.SelectedItem as Customer;
         }
 
         private void CartAddBtn_Click(object sender, EventArgs e)
         {
-            if (_currentCustomer == null)
+            if (CurrentCustomer == null)
             {
-                MessageBox.Show("Сначала выберите покупателя.");
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (CartItemsListBox.SelectedItem == null)
+            if (CartItemsListBox.SelectedItem is not Item selectedItem)
             {
-                MessageBox.Show("Выберите товар для добавления в корзину.");
+                MessageBox.Show("Выберите товар для добавления в корзину.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            Item selectedItem = CartItemsListBox.SelectedItem as Item;
-
-            _currentCustomer.Cart.Items.Add(selectedItem);
-
+            CurrentCustomer.Cart.Items.Add(selectedItem);
             UpdateCartListBox();
         }
 
         private void RemoveItemBtn_Click(object sender, EventArgs e)
         {
-            if (_currentCustomer == null)
+            if (CurrentCustomer == null)
             {
-                MessageBox.Show("Сначала выберите покупателя.");
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (CartListBox.SelectedItem == null)
+            if (CartListBox.SelectedItem is not Item selectedItem)
             {
-                MessageBox.Show("Выберите товар для удаления из корзины.");
+                MessageBox.Show("Выберите товар для удаления из корзины.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            Item selectedItem = CartListBox.SelectedItem as Item;
-
-            _currentCustomer?.Cart.Items.Remove(selectedItem);
-
+            CurrentCustomer.Cart.Items.Remove(selectedItem);
             UpdateCartListBox();
         }
 
         private void ClearBtn_Click(object sender, EventArgs e)
         {
-            if (_currentCustomer == null)
+            if (CurrentCustomer == null)
             {
-                MessageBox.Show("Сначала выберите покупателя.");
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            _currentCustomer.Cart.Items.Clear();
-
+            CurrentCustomer.Cart.Items.Clear();
             UpdateCartListBox();
         }
 
         private void CreateOrderBtn_Click(object sender, EventArgs e)
         {
-            if (_currentCustomer == null)
+            if (CurrentCustomer == null)
             {
-                MessageBox.Show("Сначала выберите покупателя.");
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (_currentCustomer.Cart.Items.Count == 0)
+            if (CurrentCustomer.Cart.Items.Count == 0)
             {
-                MessageBox.Show("Корзина пуста.");
+                MessageBox.Show("Корзина пуста.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            List<Item> orderItem = new List<Item>(_currentCustomer.Cart.Items);
+            List<Item> orderItems = new List<Item>(CurrentCustomer.Cart.Items);
+            Address sourceAddress = CurrentCustomer.Address;
+            Address deliveryAddress = new Address(
+                sourceAddress.Index,
+                sourceAddress.Country,
+                sourceAddress.City,
+                sourceAddress.Street,
+                sourceAddress.Building,
+                sourceAddress.Apartment);
 
-            int id = GenerateOrderId();
+            int id = IdGenerator.GetNextOrderId();
+            Order order;
 
-            Order order = new Order(id, _currentCustomer.Address, orderItem, Model.Enums.OrderStatus.New);
+            if (CurrentCustomer.IsPriority)
+            {
+                order = new PriorityOrder(
+                    id,
+                    deliveryAddress,
+                    orderItems,
+                    OrderStatus.New,
+                    DateTime.Now.Date,
+                    PriorityOrder.AllowedDeliveryTimes[0]);
+            }
+            else
+            {
+                order = new Order(
+                    id,
+                    deliveryAddress,
+                    orderItems,
+                    OrderStatus.New);
+            }
 
-            _currentCustomer.Orders.Add(order);
-
-            _currentCustomer.Cart.Items.Clear();
-
+            CurrentCustomer.Orders.Add(order);
+            CurrentCustomer.Cart.Items.Clear();
             UpdateCartListBox();
-        }
-
-        private int GenerateOrderId()
-        {
-            int maxId = 0;
-
-            if (_customers == null) return 1;
-
-            foreach (Customer customer in _customers)
-            {
-                foreach (Order order in customer.Orders)
-                {
-                    if (order.Id >  maxId)
-                        maxId = order.Id;
-                }
-            }
-
-            return maxId + 1;
         }
     }
 }

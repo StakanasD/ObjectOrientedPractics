@@ -34,7 +34,8 @@
             CustomersAddBtn = new Button();
             CustomersListBox = new ListBox();
             SelectedCustomerGroupBox = new GroupBox();
-            addressControl1 = new AddressControl();
+            IsPriorityCheckBox = new CheckBox();
+            addressControl1 = new Controls.AddressControl();
             NameCustomerTextBox = new TextBox();
             label3 = new Label();
             IDCustomerTextBox = new TextBox();
@@ -57,12 +58,11 @@
             CustomersGroupBox.TabIndex = 2;
             CustomersGroupBox.TabStop = false;
             CustomersGroupBox.Text = "Customers";
-            CustomersGroupBox.Enter += CustomersGroupBox_Enter;
             // 
             // CustomersRemoveBtn
             // 
             CustomersRemoveBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            CustomersRemoveBtn.Location = new Point(258, 538);
+            CustomersRemoveBtn.Location = new Point(253, 538);
             CustomersRemoveBtn.Margin = new Padding(3, 2, 3, 2);
             CustomersRemoveBtn.Name = "CustomersRemoveBtn";
             CustomersRemoveBtn.Size = new Size(136, 63);
@@ -98,6 +98,7 @@
             // SelectedCustomerGroupBox
             // 
             SelectedCustomerGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SelectedCustomerGroupBox.Controls.Add(IsPriorityCheckBox);
             SelectedCustomerGroupBox.Controls.Add(addressControl1);
             SelectedCustomerGroupBox.Controls.Add(NameCustomerTextBox);
             SelectedCustomerGroupBox.Controls.Add(label3);
@@ -110,7 +111,18 @@
             SelectedCustomerGroupBox.Size = new Size(632, 573);
             SelectedCustomerGroupBox.TabIndex = 3;
             SelectedCustomerGroupBox.TabStop = false;
-            SelectedCustomerGroupBox.Text = "Selected Item";
+            SelectedCustomerGroupBox.Text = "Selected Customer";
+            // 
+            // IsPriorityCheckBox
+            // 
+            IsPriorityCheckBox.AutoSize = true;
+            IsPriorityCheckBox.Location = new Point(15, 112);
+            IsPriorityCheckBox.Name = "IsPriorityCheckBox";
+            IsPriorityCheckBox.Size = new Size(76, 19);
+            IsPriorityCheckBox.TabIndex = 7;
+            IsPriorityCheckBox.Text = "Is Priority";
+            IsPriorityCheckBox.UseVisualStyleBackColor = true;
+            IsPriorityCheckBox.CheckedChanged += IsPriorityCheckBox_CheckedChanged;
             // 
             // addressControl1
             // 
@@ -122,10 +134,11 @@
             address1.Street = "";
             addressControl1.Address = address1;
             addressControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            addressControl1.Location = new Point(0, 118);
+            addressControl1.Location = new Point(0, 140);
             addressControl1.Margin = new Padding(3, 2, 3, 2);
             addressControl1.Name = "addressControl1";
-            addressControl1.Size = new Size(636, 254);
+            addressControl1.ReadOnly = false;
+            addressControl1.Size = new Size(632, 240);
             addressControl1.TabIndex = 6;
             // 
             // NameCustomerTextBox
@@ -134,7 +147,7 @@
             NameCustomerTextBox.Location = new Point(15, 82);
             NameCustomerTextBox.Margin = new Padding(3, 2, 3, 2);
             NameCustomerTextBox.Name = "NameCustomerTextBox";
-            NameCustomerTextBox.Size = new Size(612, 23);
+            NameCustomerTextBox.Size = new Size(605, 23);
             NameCustomerTextBox.TabIndex = 5;
             NameCustomerTextBox.TextChanged += NameCustomerTextBox_TextChanged;
             NameCustomerTextBox.Leave += NameCustomerTextBox_Leave;
@@ -184,7 +197,6 @@
 
         #endregion
 
-        private TextBox CostTextBox;
         private GroupBox CustomersGroupBox;
         private Button CustomersRemoveBtn;
         private Button CustomersAddBtn;
@@ -192,9 +204,9 @@
         private GroupBox SelectedCustomerGroupBox;
         private TextBox NameCustomerTextBox;
         private Label label3;
-        private Label label2;
         private TextBox IDCustomerTextBox;
         private Label label1;
-        private AddressControl addressControl1;
+        private Controls.AddressControl addressControl1;
+        private CheckBox IsPriorityCheckBox;
     }
 }

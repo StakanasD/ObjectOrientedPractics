@@ -1,31 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
 
-namespace ObjectOrientedPractics.View.Tabs
+namespace ObjectOrientedPractics.View.Controls
 {
+    /// <summary>
+    /// Пользовательский элемент управления для отображения и редактирования адреса доставки.
+    /// </summary>
     public partial class AddressControl : UserControl
     {
-        public AddressControl()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Хранит редактируемый адрес.
-        /// </summary>
         private Address _address = new Address();
+        private bool _readOnly;
 
         /// <summary>
-        /// Возвращает и задает отображает и редактируемый адрес.
+        /// Возвращает и задает редактируемый адрес доставки.
         /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Address Address
         {
             get
@@ -35,16 +28,39 @@ namespace ObjectOrientedPractics.View.Tabs
             }
             set
             {
-                if (value == null)
-                    _address = new Address();
-                else
-                    _address = value;
+                _address = value ?? new Address();
                 UpdateControls();
             }
         }
 
         /// <summary>
-        /// Отображает адрес в полях элемента управления.
+        /// Возвращает и задает режим только для чтения для всех полей адреса.
+        /// </summary>
+        public bool ReadOnly
+        {
+            get { return _readOnly; }
+            set
+            {
+                _readOnly = value;
+                IndexTextBox.ReadOnly = value;
+                CountryTextBox.ReadOnly = value;
+                CityTextBox.ReadOnly = value;
+                StreetTextBox.ReadOnly = value;
+                BuildingTextBox.ReadOnly = value;
+                ApartmentTextBox.ReadOnly = value;
+            }
+        }
+
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="AddressControl"/>.
+        /// </summary>
+        public AddressControl()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Отображает значения объекта адреса в текстовых полях элемента управления.
         /// </summary>
         private void UpdateControls()
         {
@@ -57,13 +73,15 @@ namespace ObjectOrientedPractics.View.Tabs
         }
 
         /// <summary>
-        /// Сохраняет данные из полей в объект адреса.
+        /// Синхронизирует корректные значения из полей ввода с объектом адреса.
         /// </summary>
         private void UpdateAddress()
         {
             if (int.TryParse(IndexTextBox.Text, out int index) &&
                 index >= 100000 && index <= 999999)
+            {
                 _address.Index = index;
+            }
 
             if (CountryTextBox.Text.Length <= 50)
                 _address.Country = CountryTextBox.Text;
@@ -82,30 +100,13 @@ namespace ObjectOrientedPractics.View.Tabs
         }
 
         /// <summary>
-        /// Проверяет почтовый индекс.
+        /// Устанавливает визуальное состояние поля ввода и всплывающую подсказку с текстом ошибки.
         /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
-        private void IndexTextBox_TextChanged(object sender, EventArgs e)
+        /// <param name="textBox">Проверяемое текстовое поле.</param>
+        /// <param name="errorMessage">Текст ошибки или null, если значение корректно.</param>
+        private void SetFieldState(TextBox textBox, string? errorMessage)
         {
-            bool isCorrect = int.TryParse(IndexTextBox.Text, out int index) && index >= 100000 && index <= 999999;
-
-            if (isCorrect)
-            {
-                _address.Index = index;
-            }
-
-            SetFieldState(IndexTextBox, isCorrect);
-        }
-
-        /// <summary>
-        /// Подсвечивает поле и показывает подсказку при ошибке.
-        /// </summary>
-        /// <param name="textBox">Проверяемое поле.</param>
-        /// <param name="isCorrect">Признак корректности.</param>
-        private void SetFieldState(TextBox textBox, bool isCorrect)
-        {
-            if (isCorrect)
+            if (string.IsNullOrEmpty(errorMessage))
             {
                 textBox.BackColor = Color.White;
                 AddressToolTip.SetToolTip(textBox, null);
@@ -113,93 +114,92 @@ namespace ObjectOrientedPractics.View.Tabs
             else
             {
                 textBox.BackColor = Color.LightPink;
-                AddressToolTip.SetToolTip(textBox, "Некорректное значение поля.");
+                AddressToolTip.SetToolTip(textBox, errorMessage);
             }
         }
 
-        /// <summary>
-        /// Проверяет страну.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
+        private void IndexTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!int.TryParse(IndexTextBox.Text, out int index))
+            {
+                SetFieldState(IndexTextBox, "Почтовый индекс должен быть целым шестизначным числом.");
+                return;
+            }
+
+            try
+            {
+                _address.Index = index;
+                SetFieldState(IndexTextBox, null);
+            }
+            catch (ArgumentException ex)
+            {
+                SetFieldState(IndexTextBox, ex.Message);
+            }
+        }
+
         private void CountryTextBox_TextChanged(object sender, EventArgs e)
         {
-            bool isCorrect = CountryTextBox.Text.Length > 0 && CountryTextBox.Text.Length <= 50;
-
-            if (isCorrect)
+            try
             {
                 _address.Country = CountryTextBox.Text;
+                SetFieldState(CountryTextBox, null);
             }
-
-            SetFieldState(CountryTextBox, isCorrect);
+            catch (ArgumentException ex)
+            {
+                SetFieldState(CountryTextBox, ex.Message);
+            }
         }
 
-        /// <summary>
-        /// Проверяет город.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void CityTextBox_TextChanged(object sender, EventArgs e)
         {
-            bool isCorrect = CityTextBox.Text.Length > 0 && CityTextBox.Text.Length <= 50;
-
-            if (isCorrect)
+            try
             {
                 _address.City = CityTextBox.Text;
+                SetFieldState(CityTextBox, null);
             }
-
-            SetFieldState(CityTextBox, isCorrect);
+            catch (ArgumentException ex)
+            {
+                SetFieldState(CityTextBox, ex.Message);
+            }
         }
 
-        /// <summary>
-        /// Проверяет улицу.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void StreetTextBox_TextChanged(object sender, EventArgs e)
         {
-            bool isCorrect = StreetTextBox.Text.Length > 0 && StreetTextBox.Text.Length <= 100;
-
-            if (isCorrect)
+            try
             {
                 _address.Street = StreetTextBox.Text;
+                SetFieldState(StreetTextBox, null);
             }
-
-            SetFieldState(StreetTextBox, isCorrect);
+            catch (ArgumentException ex)
+            {
+                SetFieldState(StreetTextBox, ex.Message);
+            }
         }
 
-        /// <summary>
-        /// Проверяет номер дома.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void BuildingTextBox_TextChanged(object sender, EventArgs e)
         {
-            bool isCorrect = BuildingTextBox.Text.Length > 0 && BuildingTextBox.Text.Length <= 10;
-
-            if (isCorrect)
+            try
             {
                 _address.Building = BuildingTextBox.Text;
+                SetFieldState(BuildingTextBox, null);
             }
-
-            SetFieldState(BuildingTextBox, isCorrect);
+            catch (ArgumentException ex)
+            {
+                SetFieldState(BuildingTextBox, ex.Message);
+            }
         }
 
-        /// <summary>
-        /// Проверяет номер квартиры.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void ApartmentTextBox_TextChanged(object sender, EventArgs e)
         {
-            bool isCorrect = ApartmentTextBox.Text.Length > 0 && ApartmentTextBox.Text.Length <= 10;
-
-            if (isCorrect)
+            try
             {
                 _address.Apartment = ApartmentTextBox.Text;
+                SetFieldState(ApartmentTextBox, null);
             }
-
-            SetFieldState(ApartmentTextBox, isCorrect);
+            catch (ArgumentException ex)
+            {
+                SetFieldState(ApartmentTextBox, ex.Message);
+            }
         }
     }
 }

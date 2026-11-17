@@ -1,14 +1,12 @@
 ﻿using ObjectOrientedPractics.Model.Enums;
+using ObjectOrientedPractics.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ObjectOrientedPractics.Model
 {
     /// <summary>
-    /// Заказ покупателя.
+    /// Класс заказа покупателя.
     /// </summary>
     public class Order
     {
@@ -21,12 +19,18 @@ namespace ObjectOrientedPractics.Model
         /// <summary>
         /// Возвращает уникальный идентификатор заказа.
         /// </summary>
-        public int Id { get { return _id; } }
+        public int Id
+        {
+            get { return _id; }
+        }
 
         /// <summary>
-        /// Возвращает дату создания заказа.
+        /// Возвращает дату и время создания заказа.
         /// </summary>
-        public DateTime CreationDate { get { return _creationDate; } }
+        public DateTime CreationDate
+        {
+            get { return _creationDate; }
+        }
 
         /// <summary>
         /// Возвращает и задает адрес доставки.
@@ -38,7 +42,7 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает и задает товары, входящие в заказ.
+        /// Возвращает и задает список товаров заказа.
         /// </summary>
         public List<Item> Items
         {
@@ -56,30 +60,46 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает стоимость заказа.
+        /// Возвращает общую стоимость товаров заказа.
         /// </summary>
         public double Amount
         {
             get
             {
                 if (_items == null || _items.Count == 0)
+                {
                     return 0.0;
+                }
 
                 double amount = 0.0;
 
                 foreach (Item item in _items)
+                {
                     amount += item.Cost;
+                }
 
                 return amount;
             }
         }
 
         /// <summary>
-        /// Создает заказ.
+        /// Создает пустой заказ со значениями по умолчанию.
         /// </summary>
-        /// <param name="id">Уникальный номер заказа.</param>
+        public Order()
+        {
+            _id = IdGenerator.GetNextOrderId();
+            _creationDate = DateTime.Now;
+            _address = new Address();
+            _items = new List<Item>();
+            _status = OrderStatus.New;
+        }
+
+        /// <summary>
+        /// Создает заказ с заданными параметрами.
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор заказа.</param>
         /// <param name="address">Адрес доставки.</param>
-        /// <param name="items">Товары заказа.</param>
+        /// <param name="items">Список товаров заказа.</param>
         /// <param name="status">Статус заказа.</param>
         public Order(int id, Address address, List<Item> items, OrderStatus status)
         {

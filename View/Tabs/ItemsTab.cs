@@ -1,19 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
-using ObjectOrientedPractics.Model.Enums; 
+using ObjectOrientedPractics.Model.Enums;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
+    /// <summary>
+    /// Вкладка управления списком товаров.
+    /// </summary>
     public partial class ItemsTab : UserControl
     {
+        private List<Item> _items = new List<Item>();
+
+        /// <summary>
+        /// Возвращает и задает список отображаемых товаров.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public List<Item> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value ?? new List<Item>();
+
+                ItemsListBox.Items.Clear();
+                foreach (Item item in _items)
+                {
+                    ItemsListBox.Items.Add(item);
+                }
+            }
+        }
+
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="ItemsTab"/>.
         /// </summary>
@@ -22,96 +43,7 @@ namespace ObjectOrientedPractics.View.Tabs
             InitializeComponent();
 
             CategoryComboBox.DataSource = Enum.GetValues(typeof(Category));
-        }
-
-        /// <summary>
-        /// Хранит список товаров.
-        /// </summary>
-        private List<Item> _items = new();
-
-        public List<Item> Items
-        {
-            get { return _items; }
-            set
-            {
-                if (value == null)
-                    _items = new List<Item>();
-                else
-                    _items = value;
-
-                    ItemsListBox.Items.Clear();
-
-                foreach (Item item in _items)
-                    ItemsListBox.Items.Add(item);
-            }
-        }
-
-        /// <summary>
-        /// Создает новый товар, добавляет его в список и выделяет его в списке товаров.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
-        private void ItemsAddBtn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Item item = new Item("Новый товар", "Описание товара", 0, Category.Electronics);
-
-                _items.Add(item);
-                ItemsListBox.Items.Add(item);
-
-                ItemsListBox.SelectedItem = item;
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Стоимость должна быть числом.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (ArgumentException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Отображает данные выбранного товара в полях редактирования.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
-        private void ItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ItemsListBox.SelectedItem is not Item item)
-                return;
-
-            IDTextBox.Text = item.Id.ToString();
-            NameTextBox.Text = item.Name;
-            InfoTextBox.Text = item.Info;
-            CostTextBox.Text = item.Cost.ToString();
-
-            CategoryComboBox.SelectedItem = item.Category;
-        }
-
-        /// <summary>
-        /// Сохраняет новое название выбранного товара.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
-        private void NameTextBox_Leave(object sender, EventArgs e)
-        {
-            if (ItemsListBox.SelectedItem is not Item item)
-                return;
-
-            try
-            {
-                item.Name = NameTextBox.Text;
-
-                RefreshSelectedItem();
-            }
-            catch (ArgumentException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                NameTextBox.Text = item.Name;
-            }
+            CategoryComboBox.SelectedIndex = -1;
         }
 
         /// <summary>
@@ -120,80 +52,114 @@ namespace ObjectOrientedPractics.View.Tabs
         private void RefreshSelectedItem()
         {
             int selectedIndex = ItemsListBox.SelectedIndex;
-
             if (selectedIndex < 0)
+            {
                 return;
+            }
 
             ItemsListBox.Items.RemoveAt(selectedIndex);
             ItemsListBox.Items.Insert(selectedIndex, _items[selectedIndex]);
             ItemsListBox.SelectedIndex = selectedIndex;
         }
 
-        /// <summary>
-        /// Сохраняет новое описание выбранного товара.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
-        private void InfoTextBox_Leave(object sender, EventArgs e)
+        private void ItemsAddBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Item item = new Item("Новый товар", "Описание товара", 0, Category.Electronics);
+
+                _items.Add(item);
+                ItemsListBox.Items.Add(item);
+                ItemsListBox.SelectedItem = item;
+            }
+            catch (ArgumentException exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ItemsListBox.SelectedItem is not Item item)
+            {
                 return;
+            }
+
+            IDTextBox.Text = item.Id.ToString();
+            NameTextBox.Text = item.Name;
+            InfoTextBox.Text = item.Info;
+            CostTextBox.Text = item.Cost.ToString();
+            CategoryComboBox.SelectedItem = item.Category;
+        }
+
+        private void NameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (ItemsListBox.SelectedItem is not Item item)
+            {
+                return;
+            }
 
             try
             {
-                item.Info = InfoTextBox.Text;
-
+                item.Name = NameTextBox.Text;
                 RefreshSelectedItem();
             }
             catch (ArgumentException exception)
             {
                 MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                NameTextBox.Text = item.Name;
+            }
+        }
 
+        private void InfoTextBox_Leave(object sender, EventArgs e)
+        {
+            if (ItemsListBox.SelectedItem is not Item item)
+            {
+                return;
+            }
+
+            try
+            {
+                item.Info = InfoTextBox.Text;
+                RefreshSelectedItem();
+            }
+            catch (ArgumentException exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 InfoTextBox.Text = item.Info;
             }
         }
 
-        /// <summary>
-        /// Сохраняет новую стоимость выбранного товара.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void CostTextBox_Leave(object sender, EventArgs e)
         {
             if (ItemsListBox.SelectedItem is not Item item)
+            {
                 return;
+            }
+
             try
             {
                 double cost = double.Parse(CostTextBox.Text);
-
                 item.Cost = cost;
-
                 RefreshSelectedItem();
             }
             catch (FormatException)
             {
                 MessageBox.Show("Стоимость должна быть числом.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 CostTextBox.Text = item.Cost.ToString();
             }
             catch (ArgumentException exception)
             {
                 MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 CostTextBox.Text = item.Cost.ToString();
             }
         }
 
-        /// <summary>
-        /// Удаляет выбранный товар из списка товаров и очищает поля редактирования.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void ItemsRemoveBtn_Click(object sender, EventArgs e)
         {
             if (ItemsListBox.SelectedItem is not Item item)
             {
-                MessageBox.Show("Выберите товар для удаления", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите товар для удаления.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -204,16 +170,22 @@ namespace ObjectOrientedPractics.View.Tabs
             NameTextBox.Clear();
             InfoTextBox.Clear();
             CostTextBox.Clear();
+            CategoryComboBox.SelectedIndex = -1;
+
+            NameTextBox.BackColor = Color.White;
+            InfoTextBox.BackColor = Color.White;
+            CostTextBox.BackColor = Color.White;
         }
 
-        /// <summary>
-        /// Проверяет корректность названия товара и подсвечивает поле при некорректном значении.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(NameTextBox.Text) || (NameTextBox.Text.Length > 200))
+            if (ItemsListBox.SelectedItem == null)
+            {
+                NameTextBox.BackColor = Color.White;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NameTextBox.Text) || NameTextBox.Text.Length > 200)
             {
                 NameTextBox.BackColor = Color.LightPink;
             }
@@ -223,14 +195,15 @@ namespace ObjectOrientedPractics.View.Tabs
             }
         }
 
-        /// <summary>
-        /// Проверяет корректность описания товара и подсвечивает поле при некорректном значении.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void InfoTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(InfoTextBox.Text) || (InfoTextBox.Text.Length > 1000))
+            if (ItemsListBox.SelectedItem == null)
+            {
+                InfoTextBox.BackColor = Color.White;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(InfoTextBox.Text) || InfoTextBox.Text.Length > 1000)
             {
                 InfoTextBox.BackColor = Color.LightPink;
             }
@@ -240,13 +213,14 @@ namespace ObjectOrientedPractics.View.Tabs
             }
         }
 
-        /// <summary>
-        /// Проверяет корректность стоимости товара и подсвечивает поле при некорректном значении.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void CostTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (ItemsListBox.SelectedItem == null)
+            {
+                CostTextBox.BackColor = Color.White;
+                return;
+            }
+
             if (!double.TryParse(CostTextBox.Text, out double cost) || cost < 0 || cost > 100000)
             {
                 CostTextBox.BackColor = Color.LightPink;
@@ -257,16 +231,13 @@ namespace ObjectOrientedPractics.View.Tabs
             }
         }
 
-        /// <summary>
-        /// Обрабатывает выбор новой категории товара.
-        /// </summary>
-        /// <param name="sender">Источник события.</param>
-        /// <param name="e">Аргументы события.</param>
         private void CategoryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(ItemsListBox.SelectedItem is Item item &&
+            if (ItemsListBox.SelectedItem is Item item &&
                 CategoryComboBox.SelectedItem is Category category)
+            {
                 item.Category = category;
+            }
         }
     }
 }

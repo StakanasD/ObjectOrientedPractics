@@ -1,10 +1,6 @@
 ﻿using ObjectOrientedPractics.Model.Enums;
 using ObjectOrientedPractics.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ObjectOrientedPractics.Model
 {
@@ -14,10 +10,9 @@ namespace ObjectOrientedPractics.Model
     public class Item
     {
         private readonly int _id;
-        private string _name;
-        private string _info;
+        private string _name = string.Empty;
+        private string _info = string.Empty;
         private double _cost;
-
         private Category _category;
 
         /// <summary>
@@ -29,50 +24,53 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Получает и задает название товара.
+        /// Возвращает и задает название товара (до 200 символов).
         /// </summary>
         public string Name
         {
-            get { return _name;}
+            get { return _name; }
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
+                {
                     throw new ArgumentException("Название товара не может быть пустым.");
+                }
 
                 ValueValidator.AssertStringOnLength(value, 200, nameof(Name));
-
                 _name = value;
             }
         }
 
         /// <summary>
-        /// Получает и задает описание товара.
+        /// Возвращает и задает описание товара (до 1000 символов).
         /// </summary>
         public string Info
         {
-            get{ return _info;}
+            get { return _info; }
             set
             {
-
                 if (string.IsNullOrWhiteSpace(value))
+                {
                     throw new ArgumentException("Описание товара не может быть пустым.");
+                }
 
                 ValueValidator.AssertStringOnLength(value, 1000, nameof(Info));
-
                 _info = value;
             }
         }
 
         /// <summary>
-        /// Получает и задает стоимость товара.
+        /// Возвращает и задает стоимость товара (от 0 до 100 000).
         /// </summary>
         public double Cost
         {
-            get { return _cost;}
+            get { return _cost; }
             set
             {
-                if ((value < 0) || (value > 100000))
+                if (value < 0 || value > 100000)
+                {
                     throw new ArgumentException("Стоимость товара должна быть от 0 до 100 000.");
+                }
 
                 _cost = value;
             }
@@ -88,30 +86,29 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает строковое представление товара.
-        /// </summary>
-        /// <returns>Название товара.</returns>
-        public override string ToString()
-        {
-            return $"{Id}. {Name}";
-        }
-
-        /// <summary>
         /// Создает экземпляр класса <see cref="Item"/>.
         /// </summary>
         /// <param name="name">Название товара.</param>
         /// <param name="info">Описание товара.</param>
         /// <param name="cost">Стоимость товара.</param>
         /// <param name="category">Категория товара.</param>
-        public Item( string name, string info, double cost, Category category)
+        public Item(string name, string info, double cost, Category category)
         {
             Name = name;
             Info = info;
             Cost = cost;
-
-            _id = IdGenerator.GetNextId();
-
             Category = category;
+
+            _id = IdGenerator.GetNextItemId();
+        }
+
+        /// <summary>
+        /// Возвращает строковое представление товара.
+        /// </summary>
+        /// <returns>Идентификатор и название товара.</returns>
+        public override string ToString()
+        {
+            return $"{Id}. {Name}";
         }
     }
 }

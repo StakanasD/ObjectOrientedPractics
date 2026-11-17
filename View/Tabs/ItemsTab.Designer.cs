@@ -57,7 +57,7 @@
             ItemsGroupBox.Margin = new Padding(3, 2, 3, 2);
             ItemsGroupBox.Name = "ItemsGroupBox";
             ItemsGroupBox.Padding = new Padding(3, 2, 3, 2);
-            ItemsGroupBox.Size = new Size(752, 556);
+            ItemsGroupBox.Size = new Size(394, 556);
             ItemsGroupBox.TabIndex = 0;
             ItemsGroupBox.TabStop = false;
             ItemsGroupBox.Text = "Items";
@@ -65,7 +65,7 @@
             // ItemsRemoveBtn
             // 
             ItemsRemoveBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            ItemsRemoveBtn.Location = new Point(258, 492);
+            ItemsRemoveBtn.Location = new Point(253, 492);
             ItemsRemoveBtn.Margin = new Padding(3, 2, 3, 2);
             ItemsRemoveBtn.Name = "ItemsRemoveBtn";
             ItemsRemoveBtn.Size = new Size(136, 55);
@@ -111,11 +111,11 @@
             SelectedItemGroupBox.Controls.Add(label2);
             SelectedItemGroupBox.Controls.Add(IDTextBox);
             SelectedItemGroupBox.Controls.Add(label1);
-            SelectedItemGroupBox.Location = new Point(402, 2);
+            SelectedItemGroupBox.Location = new Point(402, 0);
             SelectedItemGroupBox.Margin = new Padding(3, 2, 3, 2);
             SelectedItemGroupBox.Name = "SelectedItemGroupBox";
             SelectedItemGroupBox.Padding = new Padding(3, 2, 3, 2);
-            SelectedItemGroupBox.Size = new Size(350, 551);
+            SelectedItemGroupBox.Size = new Size(350, 556);
             SelectedItemGroupBox.TabIndex = 1;
             SelectedItemGroupBox.TabStop = false;
             SelectedItemGroupBox.Text = "Selected Item";
@@ -123,18 +123,19 @@
             // CategoryComboBox
             // 
             CategoryComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            CategoryComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             CategoryComboBox.FormattingEnabled = true;
             CategoryComboBox.Location = new Point(91, 108);
             CategoryComboBox.Margin = new Padding(3, 2, 3, 2);
             CategoryComboBox.Name = "CategoryComboBox";
-            CategoryComboBox.Size = new Size(140, 23);
+            CategoryComboBox.Size = new Size(243, 23);
             CategoryComboBox.TabIndex = 9;
             CategoryComboBox.SelectedIndexChanged += CategoryComboBox_SelectedIndexChanged;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(15, 114);
+            label5.Location = new Point(15, 111);
             label5.Name = "label5";
             label5.Size = new Size(58, 15);
             label5.TabIndex = 8;
@@ -143,11 +144,11 @@
             // InfoTextBox
             // 
             InfoTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            InfoTextBox.Location = new Point(15, 305);
+            InfoTextBox.Location = new Point(15, 290);
             InfoTextBox.Margin = new Padding(3, 2, 3, 2);
             InfoTextBox.Multiline = true;
             InfoTextBox.Name = "InfoTextBox";
-            InfoTextBox.Size = new Size(319, 146);
+            InfoTextBox.Size = new Size(319, 255);
             InfoTextBox.TabIndex = 7;
             InfoTextBox.TextChanged += InfoTextBox_TextChanged;
             InfoTextBox.Leave += InfoTextBox_Leave;
@@ -155,7 +156,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(15, 281);
+            label4.Location = new Point(15, 268);
             label4.Name = "label4";
             label4.Size = new Size(70, 15);
             label4.TabIndex = 6;
@@ -164,7 +165,7 @@
             // NameTextBox
             // 
             NameTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            NameTextBox.Location = new Point(15, 182);
+            NameTextBox.Location = new Point(15, 175);
             NameTextBox.Margin = new Padding(3, 2, 3, 2);
             NameTextBox.Multiline = true;
             NameTextBox.Name = "NameTextBox";
@@ -176,7 +177,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(15, 158);
+            label3.Location = new Point(15, 153);
             label3.Name = "label3";
             label3.Size = new Size(42, 15);
             label3.TabIndex = 4;
@@ -188,7 +189,7 @@
             CostTextBox.Location = new Point(91, 71);
             CostTextBox.Margin = new Padding(3, 2, 3, 2);
             CostTextBox.Name = "CostTextBox";
-            CostTextBox.Size = new Size(140, 23);
+            CostTextBox.Size = new Size(243, 23);
             CostTextBox.TabIndex = 3;
             CostTextBox.TextChanged += CostTextBox_TextChanged;
             CostTextBox.Leave += CostTextBox_Leave;
@@ -196,7 +197,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(15, 71);
+            label2.Location = new Point(15, 74);
             label2.Name = "label2";
             label2.Size = new Size(34, 15);
             label2.TabIndex = 2;
@@ -209,13 +210,13 @@
             IDTextBox.Margin = new Padding(3, 2, 3, 2);
             IDTextBox.Name = "IDTextBox";
             IDTextBox.ReadOnly = true;
-            IDTextBox.Size = new Size(140, 23);
+            IDTextBox.Size = new Size(243, 23);
             IDTextBox.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 34);
+            label1.Location = new Point(15, 37);
             label1.Name = "label1";
             label1.Size = new Size(21, 15);
             label1.TabIndex = 0;

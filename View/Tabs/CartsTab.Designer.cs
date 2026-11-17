@@ -86,8 +86,9 @@
             // CartCustomerComboBox
             // 
             CartCustomerComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            CartCustomerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             CartCustomerComboBox.FormattingEnabled = true;
-            CartCustomerComboBox.Location = new Point(406, 29);
+            CartCustomerComboBox.Location = new Point(406, 26);
             CartCustomerComboBox.Margin = new Padding(3, 2, 3, 2);
             CartCustomerComboBox.Name = "CartCustomerComboBox";
             CartCustomerComboBox.Size = new Size(335, 23);
@@ -116,6 +117,7 @@
             // 
             // label4
             // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Location = new Point(683, 280);
             label4.Name = "label4";
@@ -125,13 +127,14 @@
             // 
             // AmountLabel
             // 
+            AmountLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             AmountLabel.AutoSize = true;
             AmountLabel.Font = new Font("Arial", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            AmountLabel.Location = new Point(671, 302);
+            AmountLabel.Location = new Point(660, 302);
             AmountLabel.Name = "AmountLabel";
-            AmountLabel.Size = new Size(37, 22);
+            AmountLabel.Size = new Size(48, 22);
             AmountLabel.TabIndex = 8;
-            AmountLabel.Text = "0.0";
+            AmountLabel.Text = "0,00";
             // 
             // CreateOrderBtn
             // 
@@ -146,6 +149,7 @@
             // 
             // RemoveItemBtn
             // 
+            RemoveItemBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             RemoveItemBtn.Location = new Point(499, 338);
             RemoveItemBtn.Margin = new Padding(3, 2, 3, 2);
             RemoveItemBtn.Name = "RemoveItemBtn";
@@ -157,7 +161,8 @@
             // 
             // ClearBtn
             // 
-            ClearBtn.Location = new Point(622, 338);
+            ClearBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ClearBtn.Location = new Point(623, 338);
             ClearBtn.Margin = new Padding(3, 2, 3, 2);
             ClearBtn.Name = "ClearBtn";
             ClearBtn.Size = new Size(118, 40);

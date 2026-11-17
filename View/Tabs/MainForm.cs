@@ -1,13 +1,17 @@
-using ObjectOrientedPractics.Model;
-using System.Drawing.Text;
+﻿using ObjectOrientedPractics.Model;
 
 namespace ObjectOrientedPractics
 {
+    /// <summary>
+    /// Главное окно приложения.
+    /// </summary>
     public partial class MainForm : Form
     {
+        private readonly Store _store;
 
-        private Store _store;
-
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="MainForm"/>.
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
@@ -22,21 +26,19 @@ namespace ObjectOrientedPractics
             cartsTab1.RefreshData();
 
             ordersTab1.Customers = _store.Customers;
-            ordersTab1.UpdateOrders();
+            ordersTab1.RefreshData();
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 2)
+            {
                 cartsTab1.RefreshData();
-
-            if (tabControl1.SelectedIndex == 3)
-                ordersTab1.UpdateOrders();
-        }
-
-        private void itemsTab1_Load(object sender, EventArgs e)
-        {
-
+            }
+            else if (tabControl1.SelectedIndex == 3)
+            {
+                ordersTab1.RefreshData();
+            }
         }
     }
 }

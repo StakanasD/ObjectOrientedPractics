@@ -1,10 +1,6 @@
 ﻿using ObjectOrientedPractics.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ObjectOrientedPractics.Model
 {
@@ -14,42 +10,49 @@ namespace ObjectOrientedPractics.Model
     public class Customer
     {
         private readonly int _id;
-        private string _fullname;
-        private Address _address;
-
-        private Cart _cart;
-
-        private List<Order> _orders;
+        private string _fullname = string.Empty;
+        private Address _address = new Address();
+        private Cart _cart = new Cart();
+        private List<Order> _orders = new List<Order>();
+        private bool _isPriority;
 
         /// <summary>
         /// Возвращает уникальный идентификатор покупателя.
         /// </summary>
-        public int Id { get { return _id; } }
+        public int Id
+        {
+            get { return _id; }
+        }
 
         /// <summary>
-        /// Возвращает и задает ФИО покупателя.
+        /// Возвращает и задает полное имя покупателя (до 200 символов).
         /// </summary>
-        public string Fullname 
-        { 
-            get { return _fullname; } 
+        public string Fullname
+        {
+            get { return _fullname; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 200, nameof(Fullname));
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("ФИО покупателя не может быть пустым.");
+                }
 
+                ValueValidator.AssertStringOnLength(value, 200, nameof(Fullname));
                 _fullname = value;
             }
         }
 
         /// <summary>
-        /// Возвращает и задает адрес покупателя.
+        /// Возвращает и задает адрес доставки покупателя.
         /// </summary>
         public Address Address
         {
             get { return _address; }
+            set { _address = value ?? new Address(); }
         }
 
         /// <summary>
-        /// Возвращает и задает корзину покупателя.
+        /// Возвращает и задает корзину товаров покупателя.
         /// </summary>
         public Cart Cart
         {
@@ -58,7 +61,7 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает и задает списко заказов покупателя.
+        /// Возвращает и задает список заказов покупателя.
         /// </summary>
         public List<Order> Orders
         {
@@ -67,28 +70,36 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает строковое представление покупателя.
+        /// Возвращает и задает признак приоритетного обслуживания покупателя.
         /// </summary>
-        /// <returns>ФИО покупателя..</returns>
-        public override string ToString()
+        public bool IsPriority
         {
-            return $"{Id}. {Fullname}";
+            get { return _isPriority; }
+            set { _isPriority = value; }
         }
 
         /// <summary>
         /// Создает экземпляр класса <see cref="Customer"/>.
         /// </summary>
-        /// <param name="fullname">ФИО покупателя.</param>
+        /// <param name="fullname">Полное имя покупателя.</param>
         public Customer(string fullname)
         {
             Fullname = fullname;
-            _address = new Address();
+            Address = new Address();
+            Cart = new Cart();
+            Orders = new List<Order>();
+            IsPriority = false;
 
-            _id = IdGenerator.GetNextId();
+            _id = IdGenerator.GetNextCustomerId();
+        }
 
-            _cart = new Cart();
-            _orders = new List<Order>();
+        /// <summary>
+        /// Возвращает строковое представление покупателя.
+        /// </summary>
+        /// <returns>Идентификатор и полное имя покупателя.</returns>
+        public override string ToString()
+        {
+            return $"{Id}. {Fullname}";
         }
     }
-} 
-
+}

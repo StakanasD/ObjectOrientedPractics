@@ -80,7 +80,6 @@
             itemsTab1.Name = "itemsTab1";
             itemsTab1.Size = new Size(978, 539);
             itemsTab1.TabIndex = 0;
-            itemsTab1.Load += itemsTab1_Load;
             // 
             // CustomersTabPage
             // 
@@ -177,3 +176,4 @@
         private View.Tabs.OrdersTab ordersTab1;
     }
 }
+
