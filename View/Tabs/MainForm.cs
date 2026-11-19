@@ -31,7 +31,11 @@ namespace ObjectOrientedPractics
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 2)
+            if (tabControl1.SelectedIndex == 1)
+            {
+                customerTab1.RefreshDiscounts();
+            }
+            else if (tabControl1.SelectedIndex == 2)
             {
                 cartsTab1.RefreshData();
             }

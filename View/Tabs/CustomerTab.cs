@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
+using ObjectOrientedPractics.Model.Discounts;
+using ObjectOrientedPractics.View.Forms;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
     /// <summary>
-    /// Вкладка управления списком покупателей.
+    /// Вкладка управления списком покупателей и их скидками.
     /// </summary>
     public partial class CustomerTab : UserControl
     {
@@ -43,8 +45,31 @@ namespace ObjectOrientedPractics.View.Tabs
         }
 
         /// <summary>
-        /// Обновляет отображение выбранного покупателя в списке.
+        /// Обновляет отображение скидок выбранного покупателя.
         /// </summary>
+        public void RefreshDiscounts()
+        {
+            if (CustomersListBox.SelectedItem is Customer customer)
+            {
+                UpdateDiscountsListBox(customer);
+            }
+        }
+
+        private void UpdateDiscountsListBox(Customer? customer)
+        {
+            DiscountsListBox.Items.Clear();
+
+            if (customer == null || customer.Discounts == null)
+            {
+                return;
+            }
+
+            foreach (IDiscount discount in customer.Discounts)
+            {
+                DiscountsListBox.Items.Add(discount.Info);
+            }
+        }
+
         private void RefreshSelectedCustomer()
         {
             int selectedIndex = CustomersListBox.SelectedIndex;
@@ -85,6 +110,7 @@ namespace ObjectOrientedPractics.View.Tabs
             NameCustomerTextBox.Text = customer.Fullname;
             IsPriorityCheckBox.Checked = customer.IsPriority;
             addressControl1.Address = customer.Address;
+            UpdateDiscountsListBox(customer);
         }
 
         private void NameCustomerTextBox_Leave(object sender, EventArgs e)
@@ -122,6 +148,7 @@ namespace ObjectOrientedPractics.View.Tabs
             NameCustomerTextBox.BackColor = Color.White;
             IsPriorityCheckBox.Checked = false;
             addressControl1.Address = new Address();
+            UpdateDiscountsListBox(null);
         }
 
         private void NameCustomerTextBox_TextChanged(object sender, EventArgs e)
@@ -148,6 +175,48 @@ namespace ObjectOrientedPractics.View.Tabs
             {
                 customer.IsPriority = IsPriorityCheckBox.Checked;
             }
+        }
+
+        private void AddDiscountBtn_Click(object sender, EventArgs e)
+        {
+            if (CustomersListBox.SelectedItem is not Customer customer)
+            {
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using AddDiscountForm form = new AddDiscountForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                PercentDiscount discount = new PercentDiscount(form.SelectedCategory);
+                customer.Discounts.Add(discount);
+                UpdateDiscountsListBox(customer);
+            }
+        }
+
+        private void RemoveDiscountBtn_Click(object sender, EventArgs e)
+        {
+            if (CustomersListBox.SelectedItem is not Customer customer)
+            {
+                MessageBox.Show("Сначала выберите покупателя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int selectedIndex = DiscountsListBox.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                MessageBox.Show("Выберите скидку для удаления.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedIndex == 0 || customer.Discounts[selectedIndex] is PointsDiscount)
+            {
+                MessageBox.Show("Накопительную скидку удалить нельзя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            customer.Discounts.RemoveAt(selectedIndex);
+            UpdateDiscountsListBox(customer);
         }
     }
 }

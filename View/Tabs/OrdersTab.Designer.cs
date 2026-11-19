@@ -2,15 +2,8 @@
 {
     partial class OrdersTab
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             Model.Address address1 = new Model.Address();
@@ -44,6 +33,8 @@
             PriorityOptionsHeaderLabel = new Label();
             addressControl1 = new Controls.AddressControl();
             groupBox2 = new GroupBox();
+            OrderTotalLabel = new Label();
+            TotalCaptionLabel = new Label();
             OrderAmountLabel = new Label();
             label5 = new Label();
             OrdersItemsListBox = new ListBox();
@@ -71,7 +62,7 @@
             OrdersDataGridView.Margin = new Padding(3, 2, 3, 2);
             OrdersDataGridView.Name = "OrdersDataGridView";
             OrdersDataGridView.RowHeadersWidth = 25;
-            OrdersDataGridView.Size = new Size(432, 526);
+            OrdersDataGridView.Size = new Size(432, 512);
             OrdersDataGridView.TabIndex = 0;
             OrdersDataGridView.SelectionChanged += OrdersDataGridView_SelectionChanged;
             // 
@@ -87,7 +78,7 @@
             groupBox1.Margin = new Padding(3, 2, 3, 2);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 2, 3, 2);
-            groupBox1.Size = new Size(309, 110);
+            groupBox1.Size = new Size(265, 110);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Selected Order";
@@ -100,7 +91,7 @@
             OrdersStatusComboBox.Location = new Point(80, 75);
             OrdersStatusComboBox.Margin = new Padding(3, 2, 3, 2);
             OrdersStatusComboBox.Name = "OrdersStatusComboBox";
-            OrdersStatusComboBox.Size = new Size(224, 23);
+            OrdersStatusComboBox.Size = new Size(180, 23);
             OrdersStatusComboBox.TabIndex = 5;
             OrdersStatusComboBox.SelectedIndexChanged += OrdersStatusComboBox_SelectedIndexChanged;
             // 
@@ -111,7 +102,7 @@
             OrdersDateTextBox.Margin = new Padding(3, 2, 3, 2);
             OrdersDateTextBox.Name = "OrdersDateTextBox";
             OrdersDateTextBox.ReadOnly = true;
-            OrdersDateTextBox.Size = new Size(224, 23);
+            OrdersDateTextBox.Size = new Size(180, 23);
             OrdersDateTextBox.TabIndex = 4;
             // 
             // OrdersIdTextBox
@@ -121,7 +112,7 @@
             OrdersIdTextBox.Margin = new Padding(3, 2, 3, 2);
             OrdersIdTextBox.Name = "OrdersIdTextBox";
             OrdersIdTextBox.ReadOnly = true;
-            OrdersIdTextBox.Size = new Size(224, 23);
+            OrdersIdTextBox.Size = new Size(180, 23);
             OrdersIdTextBox.TabIndex = 3;
             // 
             // label4
@@ -156,9 +147,9 @@
             PriorityOptionsPanel.Controls.Add(DeliveryTimeComboBox);
             PriorityOptionsPanel.Controls.Add(DeliveryTimeLabel);
             PriorityOptionsPanel.Controls.Add(PriorityOptionsHeaderLabel);
-            PriorityOptionsPanel.Location = new Point(756, 10);
+            PriorityOptionsPanel.Location = new Point(712, 10);
             PriorityOptionsPanel.Name = "PriorityOptionsPanel";
-            PriorityOptionsPanel.Size = new Size(319, 110);
+            PriorityOptionsPanel.Size = new Size(265, 110);
             PriorityOptionsPanel.TabIndex = 6;
             PriorityOptionsPanel.Visible = false;
             // 
@@ -166,9 +157,9 @@
             // 
             DeliveryTimeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             DeliveryTimeComboBox.FormattingEnabled = true;
-            DeliveryTimeComboBox.Location = new Point(108, 44);
+            DeliveryTimeComboBox.Location = new Point(102, 44);
             DeliveryTimeComboBox.Name = "DeliveryTimeComboBox";
-            DeliveryTimeComboBox.Size = new Size(195, 23);
+            DeliveryTimeComboBox.Size = new Size(155, 23);
             DeliveryTimeComboBox.TabIndex = 2;
             DeliveryTimeComboBox.SelectedIndexChanged += DeliveryTimeComboBox_SelectedIndexChanged;
             // 
@@ -201,48 +192,29 @@
             address1.Street = "";
             addressControl1.Address = address1;
             addressControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            addressControl1.Location = new Point(441, 126);
+            addressControl1.Location = new Point(441, 124);
             addressControl1.Margin = new Padding(3, 2, 3, 2);
             addressControl1.Name = "addressControl1";
             addressControl1.ReadOnly = true;
-            addressControl1.Size = new Size(634, 240);
+            addressControl1.Size = new Size(536, 185);
             addressControl1.TabIndex = 3;
             // 
             // groupBox2
             // 
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox2.Controls.Add(OrderTotalLabel);
+            groupBox2.Controls.Add(TotalCaptionLabel);
             groupBox2.Controls.Add(OrderAmountLabel);
             groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(OrdersItemsListBox);
-            groupBox2.Location = new Point(441, 372);
+            groupBox2.Location = new Point(441, 314);
             groupBox2.Margin = new Padding(3, 2, 3, 2);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 2, 3, 2);
-            groupBox2.Size = new Size(634, 179);
+            groupBox2.Size = new Size(536, 223);
             groupBox2.TabIndex = 4;
             groupBox2.TabStop = false;
             groupBox2.Text = "Order Items";
-            // 
-            // OrderAmountLabel
-            // 
-            OrderAmountLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            OrderAmountLabel.AutoSize = true;
-            OrderAmountLabel.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            OrderAmountLabel.Location = new Point(555, 146);
-            OrderAmountLabel.Name = "OrderAmountLabel";
-            OrderAmountLabel.Size = new Size(49, 25);
-            OrderAmountLabel.TabIndex = 2;
-            OrderAmountLabel.Text = "0,00";
-            // 
-            // label5
-            // 
-            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label5.AutoSize = true;
-            label5.Location = new Point(573, 124);
-            label5.Name = "label5";
-            label5.Size = new Size(54, 15);
-            label5.TabIndex = 1;
-            label5.Text = "Amount:";
             // 
             // OrdersItemsListBox
             // 
@@ -252,8 +224,51 @@
             OrdersItemsListBox.Location = new Point(5, 20);
             OrdersItemsListBox.Margin = new Padding(3, 2, 3, 2);
             OrdersItemsListBox.Name = "OrdersItemsListBox";
-            OrdersItemsListBox.Size = new Size(624, 94);
+            OrdersItemsListBox.Size = new Size(526, 140);
             OrdersItemsListBox.TabIndex = 0;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            label5.AutoSize = true;
+            label5.Location = new Point(310, 168);
+            label5.Name = "label5";
+            label5.Size = new Size(54, 15);
+            label5.TabIndex = 1;
+            label5.Text = "Amount:";
+            // 
+            // OrderAmountLabel
+            // 
+            OrderAmountLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            OrderAmountLabel.AutoSize = true;
+            OrderAmountLabel.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            OrderAmountLabel.Location = new Point(305, 188);
+            OrderAmountLabel.Name = "OrderAmountLabel";
+            OrderAmountLabel.Size = new Size(49, 25);
+            OrderAmountLabel.TabIndex = 2;
+            OrderAmountLabel.Text = "0,00";
+            // 
+            // TotalCaptionLabel
+            // 
+            TotalCaptionLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            TotalCaptionLabel.AutoSize = true;
+            TotalCaptionLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            TotalCaptionLabel.Location = new Point(455, 168);
+            TotalCaptionLabel.Name = "TotalCaptionLabel";
+            TotalCaptionLabel.Size = new Size(39, 15);
+            TotalCaptionLabel.TabIndex = 3;
+            TotalCaptionLabel.Text = "Total:";
+            // 
+            // OrderTotalLabel
+            // 
+            OrderTotalLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            OrderTotalLabel.AutoSize = true;
+            OrderTotalLabel.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            OrderTotalLabel.Location = new Point(445, 188);
+            OrderTotalLabel.Name = "OrderTotalLabel";
+            OrderTotalLabel.Size = new Size(49, 25);
+            OrderTotalLabel.TabIndex = 4;
+            OrderTotalLabel.Text = "0,00";
             // 
             // OrdersTab
             // 
@@ -267,7 +282,7 @@
             Controls.Add(OrdersDataGridView);
             Margin = new Padding(3, 2, 3, 2);
             Name = "OrdersTab";
-            Size = new Size(1077, 556);
+            Size = new Size(984, 543);
             ((System.ComponentModel.ISupportInitialize)OrdersDataGridView).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -299,5 +314,7 @@
         private ListBox OrdersItemsListBox;
         private Label label5;
         private Label OrderAmountLabel;
+        private Label TotalCaptionLabel;
+        private Label OrderTotalLabel;
     }
 }

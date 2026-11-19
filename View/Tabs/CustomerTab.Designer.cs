@@ -2,15 +2,8 @@
 {
     partial class CustomerTab
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             Model.Address address1 = new Model.Address();
@@ -34,6 +23,10 @@
             CustomersAddBtn = new Button();
             CustomersListBox = new ListBox();
             SelectedCustomerGroupBox = new GroupBox();
+            RemoveDiscountBtn = new Button();
+            AddDiscountBtn = new Button();
+            DiscountsListBox = new ListBox();
+            DiscountsLabel = new Label();
             IsPriorityCheckBox = new CheckBox();
             addressControl1 = new Controls.AddressControl();
             NameCustomerTextBox = new TextBox();
@@ -54,7 +47,7 @@
             CustomersGroupBox.Margin = new Padding(3, 2, 3, 2);
             CustomersGroupBox.Name = "CustomersGroupBox";
             CustomersGroupBox.Padding = new Padding(3, 2, 3, 2);
-            CustomersGroupBox.Size = new Size(394, 610);
+            CustomersGroupBox.Size = new Size(394, 540);
             CustomersGroupBox.TabIndex = 2;
             CustomersGroupBox.TabStop = false;
             CustomersGroupBox.Text = "Customers";
@@ -62,10 +55,10 @@
             // CustomersRemoveBtn
             // 
             CustomersRemoveBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            CustomersRemoveBtn.Location = new Point(253, 538);
+            CustomersRemoveBtn.Location = new Point(253, 476);
             CustomersRemoveBtn.Margin = new Padding(3, 2, 3, 2);
             CustomersRemoveBtn.Name = "CustomersRemoveBtn";
-            CustomersRemoveBtn.Size = new Size(136, 63);
+            CustomersRemoveBtn.Size = new Size(136, 55);
             CustomersRemoveBtn.TabIndex = 2;
             CustomersRemoveBtn.Text = "Remove";
             CustomersRemoveBtn.UseVisualStyleBackColor = true;
@@ -74,10 +67,10 @@
             // CustomersAddBtn
             // 
             CustomersAddBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            CustomersAddBtn.Location = new Point(5, 538);
+            CustomersAddBtn.Location = new Point(5, 476);
             CustomersAddBtn.Margin = new Padding(3, 2, 3, 2);
             CustomersAddBtn.Name = "CustomersAddBtn";
-            CustomersAddBtn.Size = new Size(136, 63);
+            CustomersAddBtn.Size = new Size(136, 55);
             CustomersAddBtn.TabIndex = 1;
             CustomersAddBtn.Text = "Add";
             CustomersAddBtn.UseVisualStyleBackColor = true;
@@ -91,32 +84,75 @@
             CustomersListBox.Location = new Point(5, 20);
             CustomersListBox.Margin = new Padding(3, 2, 3, 2);
             CustomersListBox.Name = "CustomersListBox";
-            CustomersListBox.Size = new Size(384, 514);
+            CustomersListBox.Size = new Size(384, 454);
             CustomersListBox.TabIndex = 0;
             CustomersListBox.SelectedIndexChanged += CustomersListBox_SelectedIndexChanged;
             // 
             // SelectedCustomerGroupBox
             // 
             SelectedCustomerGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SelectedCustomerGroupBox.Controls.Add(RemoveDiscountBtn);
+            SelectedCustomerGroupBox.Controls.Add(AddDiscountBtn);
+            SelectedCustomerGroupBox.Controls.Add(DiscountsListBox);
+            SelectedCustomerGroupBox.Controls.Add(DiscountsLabel);
             SelectedCustomerGroupBox.Controls.Add(IsPriorityCheckBox);
             SelectedCustomerGroupBox.Controls.Add(addressControl1);
             SelectedCustomerGroupBox.Controls.Add(NameCustomerTextBox);
             SelectedCustomerGroupBox.Controls.Add(label3);
             SelectedCustomerGroupBox.Controls.Add(IDCustomerTextBox);
             SelectedCustomerGroupBox.Controls.Add(label1);
-            SelectedCustomerGroupBox.Location = new Point(402, 2);
+            SelectedCustomerGroupBox.Location = new Point(402, 0);
             SelectedCustomerGroupBox.Margin = new Padding(3, 2, 3, 2);
             SelectedCustomerGroupBox.Name = "SelectedCustomerGroupBox";
             SelectedCustomerGroupBox.Padding = new Padding(3, 2, 3, 2);
-            SelectedCustomerGroupBox.Size = new Size(632, 573);
+            SelectedCustomerGroupBox.Size = new Size(576, 540);
             SelectedCustomerGroupBox.TabIndex = 3;
             SelectedCustomerGroupBox.TabStop = false;
             SelectedCustomerGroupBox.Text = "Selected Customer";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(15, 27);
+            label1.Name = "label1";
+            label1.Size = new Size(21, 15);
+            label1.TabIndex = 0;
+            label1.Text = "ID:";
+            // 
+            // IDCustomerTextBox
+            // 
+            IDCustomerTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            IDCustomerTextBox.Location = new Point(67, 24);
+            IDCustomerTextBox.Margin = new Padding(3, 2, 3, 2);
+            IDCustomerTextBox.Name = "IDCustomerTextBox";
+            IDCustomerTextBox.ReadOnly = true;
+            IDCustomerTextBox.Size = new Size(200, 23);
+            IDCustomerTextBox.TabIndex = 1;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(15, 53);
+            label3.Name = "label3";
+            label3.Size = new Size(64, 15);
+            label3.TabIndex = 4;
+            label3.Text = "Full Name:";
+            // 
+            // NameCustomerTextBox
+            // 
+            NameCustomerTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            NameCustomerTextBox.Location = new Point(15, 71);
+            NameCustomerTextBox.Margin = new Padding(3, 2, 3, 2);
+            NameCustomerTextBox.Name = "NameCustomerTextBox";
+            NameCustomerTextBox.Size = new Size(545, 23);
+            NameCustomerTextBox.TabIndex = 5;
+            NameCustomerTextBox.TextChanged += NameCustomerTextBox_TextChanged;
+            NameCustomerTextBox.Leave += NameCustomerTextBox_Leave;
+            // 
             // IsPriorityCheckBox
             // 
             IsPriorityCheckBox.AutoSize = true;
-            IsPriorityCheckBox.Location = new Point(15, 112);
+            IsPriorityCheckBox.Location = new Point(15, 99);
             IsPriorityCheckBox.Name = "IsPriorityCheckBox";
             IsPriorityCheckBox.Size = new Size(76, 19);
             IsPriorityCheckBox.TabIndex = 7;
@@ -134,51 +170,54 @@
             address1.Street = "";
             addressControl1.Address = address1;
             addressControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            addressControl1.Location = new Point(0, 140);
+            addressControl1.Location = new Point(3, 122);
             addressControl1.Margin = new Padding(3, 2, 3, 2);
             addressControl1.Name = "addressControl1";
             addressControl1.ReadOnly = false;
-            addressControl1.Size = new Size(632, 240);
+            addressControl1.Size = new Size(568, 195);
             addressControl1.TabIndex = 6;
             // 
-            // NameCustomerTextBox
+            // DiscountsLabel
             // 
-            NameCustomerTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            NameCustomerTextBox.Location = new Point(15, 82);
-            NameCustomerTextBox.Margin = new Padding(3, 2, 3, 2);
-            NameCustomerTextBox.Name = "NameCustomerTextBox";
-            NameCustomerTextBox.Size = new Size(605, 23);
-            NameCustomerTextBox.TabIndex = 5;
-            NameCustomerTextBox.TextChanged += NameCustomerTextBox_TextChanged;
-            NameCustomerTextBox.Leave += NameCustomerTextBox_Leave;
+            DiscountsLabel.AutoSize = true;
+            DiscountsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            DiscountsLabel.Location = new Point(15, 324);
+            DiscountsLabel.Name = "DiscountsLabel";
+            DiscountsLabel.Size = new Size(61, 15);
+            DiscountsLabel.TabIndex = 8;
+            DiscountsLabel.Text = "Discounts";
             // 
-            // label3
+            // DiscountsListBox
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(15, 64);
-            label3.Name = "label3";
-            label3.Size = new Size(64, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Full Name:";
+            DiscountsListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            DiscountsListBox.FormattingEnabled = true;
+            DiscountsListBox.ItemHeight = 15;
+            DiscountsListBox.Location = new Point(15, 344);
+            DiscountsListBox.Name = "DiscountsListBox";
+            DiscountsListBox.Size = new Size(430, 184);
+            DiscountsListBox.TabIndex = 9;
             // 
-            // IDCustomerTextBox
+            // AddDiscountBtn
             // 
-            IDCustomerTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            IDCustomerTextBox.Location = new Point(67, 34);
-            IDCustomerTextBox.Margin = new Padding(3, 2, 3, 2);
-            IDCustomerTextBox.Name = "IDCustomerTextBox";
-            IDCustomerTextBox.ReadOnly = true;
-            IDCustomerTextBox.Size = new Size(422, 23);
-            IDCustomerTextBox.TabIndex = 1;
+            AddDiscountBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddDiscountBtn.Location = new Point(455, 344);
+            AddDiscountBtn.Name = "AddDiscountBtn";
+            AddDiscountBtn.Size = new Size(105, 36);
+            AddDiscountBtn.TabIndex = 10;
+            AddDiscountBtn.Text = "Add";
+            AddDiscountBtn.UseVisualStyleBackColor = true;
+            AddDiscountBtn.Click += AddDiscountBtn_Click;
             // 
-            // label1
+            // RemoveDiscountBtn
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(15, 34);
-            label1.Name = "label1";
-            label1.Size = new Size(21, 15);
-            label1.TabIndex = 0;
-            label1.Text = "ID:";
+            RemoveDiscountBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            RemoveDiscountBtn.Location = new Point(455, 388);
+            RemoveDiscountBtn.Name = "RemoveDiscountBtn";
+            RemoveDiscountBtn.Size = new Size(105, 36);
+            RemoveDiscountBtn.TabIndex = 11;
+            RemoveDiscountBtn.Text = "Remove";
+            RemoveDiscountBtn.UseVisualStyleBackColor = true;
+            RemoveDiscountBtn.Click += RemoveDiscountBtn_Click;
             // 
             // CustomerTab
             // 
@@ -188,7 +227,7 @@
             Controls.Add(SelectedCustomerGroupBox);
             Margin = new Padding(3, 2, 3, 2);
             Name = "CustomerTab";
-            Size = new Size(1072, 610);
+            Size = new Size(984, 540);
             CustomersGroupBox.ResumeLayout(false);
             SelectedCustomerGroupBox.ResumeLayout(false);
             SelectedCustomerGroupBox.PerformLayout();
@@ -208,5 +247,9 @@
         private Label label1;
         private Controls.AddressControl addressControl1;
         private CheckBox IsPriorityCheckBox;
+        private Label DiscountsLabel;
+        private ListBox DiscountsListBox;
+        private Button AddDiscountBtn;
+        private Button RemoveDiscountBtn;
     }
 }

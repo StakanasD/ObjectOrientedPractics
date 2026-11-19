@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
 using ObjectOrientedPractics.Model.Enums;
+using ObjectOrientedPractics.Model.Orders;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
@@ -48,9 +49,6 @@ namespace ObjectOrientedPractics.View.Tabs
             UpdateOrderInfo();
         }
 
-        /// <summary>
-        /// Обновляет отображение всех данных текущего приоритетного заказа.
-        /// </summary>
         private void UpdateOrderInfo()
         {
             if (_currentOrder == null)
@@ -67,9 +65,6 @@ namespace ObjectOrientedPractics.View.Tabs
             UpdateItemsList();
         }
 
-        /// <summary>
-        /// Обновляет список товаров и итоговую стоимость заказа.
-        /// </summary>
         private void UpdateItemsList()
         {
             OrdersItemsListBox.Items.Clear();

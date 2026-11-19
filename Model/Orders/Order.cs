@@ -3,7 +3,7 @@ using ObjectOrientedPractics.Services;
 using System;
 using System.Collections.Generic;
 
-namespace ObjectOrientedPractics.Model
+namespace ObjectOrientedPractics.Model.Orders
 {
     /// <summary>
     /// Класс заказа покупателя.
@@ -15,6 +15,7 @@ namespace ObjectOrientedPractics.Model
         private Address _address;
         private List<Item> _items;
         private OrderStatus _status;
+        private double _discountAmount;
 
         /// <summary>
         /// Возвращает уникальный идентификатор заказа.
@@ -60,7 +61,7 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает общую стоимость товаров заказа.
+        /// Возвращает общую стоимость товаров заказа без учета скидки.
         /// </summary>
         public double Amount
         {
@@ -83,6 +84,27 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
+        /// Возвращает и задает размер примененной скидки.
+        /// </summary>
+        public double DiscountAmount
+        {
+            get { return _discountAmount; }
+            set { _discountAmount = value; }
+        }
+
+        /// <summary>
+        /// Возвращает конечную стоимость заказа с учетом примененной скидки.
+        /// </summary>
+        public double Total
+        {
+            get
+            {
+                double total = Amount - DiscountAmount;
+                return total < 0 ? 0.0 : total;
+            }
+        }
+
+        /// <summary>
         /// Создает пустой заказ со значениями по умолчанию.
         /// </summary>
         public Order()
@@ -92,6 +114,7 @@ namespace ObjectOrientedPractics.Model
             _address = new Address();
             _items = new List<Item>();
             _status = OrderStatus.New;
+            _discountAmount = 0.0;
         }
 
         /// <summary>
@@ -108,6 +131,7 @@ namespace ObjectOrientedPractics.Model
             _address = address;
             _items = items;
             _status = status;
+            _discountAmount = 0.0;
         }
     }
 }

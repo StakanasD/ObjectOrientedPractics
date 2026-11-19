@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
 using ObjectOrientedPractics.Model.Enums;
+using ObjectOrientedPractics.Model.Orders;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
@@ -28,9 +29,6 @@ namespace ObjectOrientedPractics.View.Tabs
             set { _customers = value ?? new List<Customer>(); }
         }
 
-        /// <summary>
-        /// Возвращает и задает выбранный в таблице заказ.
-        /// </summary>
         private Order? SelectedOrder
         {
             get { return _selectedOrder; }
@@ -49,6 +47,7 @@ namespace ObjectOrientedPractics.View.Tabs
                 OrdersIdTextBox.Text = _selectedOrder.Id.ToString();
                 OrdersDateTextBox.Text = _selectedOrder.CreationDate.ToString();
                 OrderAmountLabel.Text = _selectedOrder.Amount.ToString("N2");
+                OrderTotalLabel.Text = _selectedOrder.Total.ToString("N2");
                 addressControl1.Address = _selectedOrder.Address;
 
                 OrdersItemsListBox.Items.Clear();
@@ -136,6 +135,7 @@ namespace ObjectOrientedPractics.View.Tabs
             OrdersDataGridView.Columns.Add("Customer", "ФИО покупателя");
             OrdersDataGridView.Columns.Add("Address", "Адрес доставки");
             OrdersDataGridView.Columns.Add("Amount", "Стоимость");
+            OrdersDataGridView.Columns.Add("Total", "Итого");
             OrdersDataGridView.Columns.Add("Status", "Статус заказа");
 
             foreach (DataGridViewColumn column in OrdersDataGridView.Columns)
@@ -178,6 +178,7 @@ namespace ObjectOrientedPractics.View.Tabs
                     customer != null ? customer.Fullname : string.Empty,
                     order.Address,
                     order.Amount.ToString("N2"),
+                    order.Total.ToString("N2"),
                     order.Status);
             }
 
@@ -192,6 +193,7 @@ namespace ObjectOrientedPractics.View.Tabs
             OrdersIdTextBox.Clear();
             OrdersDateTextBox.Clear();
             OrderAmountLabel.Text = 0.0.ToString("N2");
+            OrderTotalLabel.Text = 0.0.ToString("N2");
             addressControl1.Address = new Address();
             OrdersItemsListBox.Items.Clear();
             OrdersStatusComboBox.SelectedIndex = -1;

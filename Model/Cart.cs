@@ -7,7 +7,7 @@ namespace ObjectOrientedPractics.Model
     /// </summary>
     public class Cart
     {
-        private List<Item> _items;
+        private List<Item> _items; // Агрегация, корзина хранит ссылки на существующие товары 
 
         /// <summary>
         /// Возвращает и задает список товаров в корзине.

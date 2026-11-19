@@ -11,7 +11,7 @@ namespace ObjectOrientedPractics.View.Controls
     /// </summary>
     public partial class AddressControl : UserControl
     {
-        private Address _address = new Address();
+        private Address _address;
         private bool _readOnly;
 
         /// <summary>
