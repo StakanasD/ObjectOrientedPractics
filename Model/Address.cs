@@ -133,7 +133,7 @@ namespace ObjectOrientedPractics.Model
         /// Возвращает строковое представление адреса.
         /// </summary>
         /// <returns>Строка с полным адресом доставки.</returns>
-        public override string ToString()
+        public override string ToString() // сигнатура
         {
             return $"{Index}, {Country}, {City}, {Street}, {Building}, {Apartment}";
         }

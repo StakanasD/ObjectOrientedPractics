@@ -8,7 +8,7 @@ namespace ObjectOrientedPractics.Model.Orders
     /// <summary>
     /// Класс заказа покупателя.
     /// </summary>
-    public class Order
+    public class Order // родительский 
     {
         private readonly int _id;
         private readonly DateTime _creationDate;

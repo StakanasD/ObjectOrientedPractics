@@ -8,7 +8,7 @@ namespace ObjectOrientedPractics.Model.Orders
     /// <summary>
     /// Класс заказа приоритетного обслуживания.
     /// </summary>
-    public class PriorityOrder : Order
+    public class PriorityOrder : Order // дочерний 
     {
         /// <summary>
         /// Допустимые диапазоны времени доставки.
