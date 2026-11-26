@@ -6,7 +6,7 @@ namespace ObjectOrientedPractics.Model
     /// <summary>
     /// Класс адреса доставки.
     /// </summary>
-    public class Address
+    public class Address : ICloneable, IEquatable<Address>
     {
         private int _index = 100000;
         private string _country = string.Empty;
@@ -16,7 +16,7 @@ namespace ObjectOrientedPractics.Model
         private string _apartment = string.Empty;
 
         /// <summary>
-        /// Возвращает и задает почтовый индекс (целое шестизначное число).
+        /// Возвращает и задает почтовый индекс (шестизначное целое число).
         /// </summary>
         public int Index
         {
@@ -33,66 +33,66 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Возвращает и задает страну или регион (не более 50 символов).
+        /// Возвращает и задает название страны (до 50 символов).
         /// </summary>
         public string Country
         {
             get { return _country; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 50, nameof(Country));
+                ValueValidator.AssertStringOnLength(value ?? string.Empty, 50, nameof(Country));
                 _country = value ?? string.Empty;
             }
         }
 
         /// <summary>
-        /// Возвращает и задает город (не более 50 символов).
+        /// Возвращает и задает название города (до 50 символов).
         /// </summary>
         public string City
         {
             get { return _city; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 50, nameof(City));
+                ValueValidator.AssertStringOnLength(value ?? string.Empty, 50, nameof(City));
                 _city = value ?? string.Empty;
             }
         }
 
         /// <summary>
-        /// Возвращает и задает улицу (не более 100 символов).
+        /// Возвращает и задает название улицы (до 100 символов).
         /// </summary>
         public string Street
         {
             get { return _street; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 100, nameof(Street));
+                ValueValidator.AssertStringOnLength(value ?? string.Empty, 100, nameof(Street));
                 _street = value ?? string.Empty;
             }
         }
 
         /// <summary>
-        /// Возвращает и задает номер дома (не более 10 символов).
+        /// Возвращает и задает номер дома (до 10 символов).
         /// </summary>
         public string Building
         {
             get { return _building; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 10, nameof(Building));
+                ValueValidator.AssertStringOnLength(value ?? string.Empty, 10, nameof(Building));
                 _building = value ?? string.Empty;
             }
         }
 
         /// <summary>
-        /// Возвращает и задает номер квартиры или помещения (не более 10 символов).
+        /// Возвращает и задает номер квартиры или помещения (до 10 символов).
         /// </summary>
         public string Apartment
         {
             get { return _apartment; }
             set
             {
-                ValueValidator.AssertStringOnLength(value, 10, nameof(Apartment));
+                ValueValidator.AssertStringOnLength(value ?? string.Empty, 10, nameof(Apartment));
                 _apartment = value ?? string.Empty;
             }
         }
@@ -111,10 +111,10 @@ namespace ObjectOrientedPractics.Model
         }
 
         /// <summary>
-        /// Создает адрес с заданными данными.
+        /// Создает адрес с заданными параметрами.
         /// </summary>
         /// <param name="index">Почтовый индекс.</param>
-        /// <param name="country">Страна или регион.</param>
+        /// <param name="country">Страна.</param>
         /// <param name="city">Город.</param>
         /// <param name="street">Улица.</param>
         /// <param name="building">Номер дома.</param>
@@ -132,10 +132,64 @@ namespace ObjectOrientedPractics.Model
         /// <summary>
         /// Возвращает строковое представление адреса.
         /// </summary>
-        /// <returns>Строка с полным адресом доставки.</returns>
-        public override string ToString() // сигнатура
+        /// <returns>Форматированная строка адреса.</returns>
+        public override string ToString()
         {
             return $"{Index}, {Country}, {City}, {Street}, {Building}, {Apartment}";
+        }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return new Address(Index, Country, City, Street, Building, Apartment);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Address? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Index == other.Index
+                && Country == other.Country
+                && City == other.City
+                && Street == other.Street
+                && Building == other.Building
+                && Apartment == other.Apartment;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is not Address other)
+            {
+                return false;
+            }
+
+            return Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Index, Country, City, Street, Building, Apartment);
         }
     }
 }

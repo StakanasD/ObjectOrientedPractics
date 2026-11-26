@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ObjectOrientedPractics.Model
 {
     /// <summary>
     /// Класс корзины товаров покупателя.
     /// </summary>
-    public class Cart
+    public class Cart : ICloneable
     {
-        private List<Item> _items; // Агрегация, корзина хранит ссылки на существующие товары 
+        private List<Item> _items = new List<Item>();
 
         /// <summary>
         /// Возвращает и задает список товаров в корзине.
@@ -15,7 +16,7 @@ namespace ObjectOrientedPractics.Model
         public List<Item> Items
         {
             get { return _items; }
-            set { _items = value; }
+            set { _items = value ?? new List<Item>(); }
         }
 
         /// <summary>
@@ -31,7 +32,6 @@ namespace ObjectOrientedPractics.Model
                 }
 
                 double amount = 0.0;
-
                 foreach (Item item in _items)
                 {
                     amount += item.Cost;
@@ -47,6 +47,18 @@ namespace ObjectOrientedPractics.Model
         public Cart()
         {
             _items = new List<Item>();
+        }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            Cart clone = new Cart();
+            if (Items != null)
+            {
+                clone.Items = new List<Item>(Items);
+            }
+
+            return clone;
         }
     }
 }

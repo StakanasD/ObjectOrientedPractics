@@ -2,13 +2,14 @@
 using ObjectOrientedPractics.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ObjectOrientedPractics.Model.Orders
 {
     /// <summary>
     /// Класс заказа покупателя.
     /// </summary>
-    public class Order // родительский 
+    public class Order : IEquatable<Order>
     {
         private readonly int _id;
         private readonly DateTime _creationDate;
@@ -132,6 +133,56 @@ namespace ObjectOrientedPractics.Model.Orders
             _items = items;
             _status = status;
             _discountAmount = 0.0;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Order? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            bool itemsEqual = (Items == null && other.Items == null)
+                || (Items != null && other.Items != null && Items.SequenceEqual(other.Items));
+
+            return Id == other.Id
+                && Equals(Address, other.Address)
+                && Status == other.Status
+                && DiscountAmount.Equals(other.DiscountAmount)
+                && itemsEqual;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is not Order other)
+            {
+                return false;
+            }
+
+            return Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Address, Status, DiscountAmount);
         }
     }
 }

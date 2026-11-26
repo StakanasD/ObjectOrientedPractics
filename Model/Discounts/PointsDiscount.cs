@@ -6,7 +6,7 @@ namespace ObjectOrientedPractics.Model.Discounts
     /// <summary>
     /// Класс накопительной балльной скидки.
     /// </summary>
-    public class PointsDiscount : IDiscount
+    public class PointsDiscount : IDiscount, IComparable<PointsDiscount>
     {
         private int _points;
 
@@ -98,6 +98,9 @@ namespace ObjectOrientedPractics.Model.Discounts
             Points += addedPoints;
         }
 
+        /// <summary>
+        /// Вычисляет общую стоимость списка товаров.
+        /// </summary>
         private static double GetTotalAmount(List<Item> items)
         {
             double amount = 0.0;
@@ -107,6 +110,17 @@ namespace ObjectOrientedPractics.Model.Discounts
             }
 
             return amount;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(PointsDiscount? other)
+        {
+            if (other is null)
+            {
+                return 1;
+            }
+
+            return Points.CompareTo(other.Points);
         }
     }
 }

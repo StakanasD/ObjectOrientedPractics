@@ -7,7 +7,7 @@ namespace ObjectOrientedPractics.Model.Discounts
     /// <summary>
     /// Класс накопительной процентной скидки на определенную категорию товаров.
     /// </summary>
-    public class PercentDiscount : IDiscount
+    public class PercentDiscount : IDiscount, IComparable<PercentDiscount>
     {
         private int _percent = 1;
         private double _totalSpent;
@@ -114,6 +114,9 @@ namespace ObjectOrientedPractics.Model.Discounts
             Percent = Math.Min(10, calculatedPercent);
         }
 
+        /// <summary>
+        /// Вычисляет суммарную стоимость товаров, относящихся к категории скидки.
+        /// </summary>
         private double GetCategoryAmount(List<Item> items)
         {
             double amount = 0.0;
@@ -126,6 +129,17 @@ namespace ObjectOrientedPractics.Model.Discounts
             }
 
             return amount;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(PercentDiscount? other)
+        {
+            if (other is null)
+            {
+                return 1;
+            }
+
+            return Percent.CompareTo(other.Percent);
         }
     }
 }
