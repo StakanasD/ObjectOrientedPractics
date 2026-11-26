@@ -5,18 +5,21 @@ using System.Drawing;
 using System.Windows.Forms;
 using ObjectOrientedPractics.Model;
 using ObjectOrientedPractics.Model.Enums;
+using ObjectOrientedPractics.Services;
 
 namespace ObjectOrientedPractics.View.Tabs
 {
     /// <summary>
-    /// Вкладка управления списком товаров.
+    /// Вкладка управления товарами магазина с поддержкой поиска и сортировки через делегаты.
     /// </summary>
     public partial class ItemsTab : UserControl
     {
         private List<Item> _items = new List<Item>();
+        private List<Item> _displayedItems = new List<Item>();
+        private bool _isUpdatingControls;
 
         /// <summary>
-        /// Возвращает и задает список отображаемых товаров.
+        /// Возвращает и задает общий список товаров магазина.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -26,12 +29,7 @@ namespace ObjectOrientedPractics.View.Tabs
             set
             {
                 _items = value ?? new List<Item>();
-
-                ItemsListBox.Items.Clear();
-                foreach (Item item in _items)
-                {
-                    ItemsListBox.Items.Add(item);
-                }
+                UpdateDisplayedItems();
             }
         }
 
@@ -43,200 +41,298 @@ namespace ObjectOrientedPractics.View.Tabs
             InitializeComponent();
 
             CategoryComboBox.DataSource = Enum.GetValues(typeof(Category));
-            CategoryComboBox.SelectedIndex = -1;
+
+            OrderByComboBox.Items.Add("Name");
+            OrderByComboBox.Items.Add("Cost (Ascending)");
+            OrderByComboBox.Items.Add("Cost (Descending)");
+            OrderByComboBox.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Обновляет отображение выбранного товара в списке.
-        /// </summary>
-        private void RefreshSelectedItem()
+        private void UpdateDisplayedItems()
         {
-            int selectedIndex = ItemsListBox.SelectedIndex;
-            if (selectedIndex < 0)
+            Item? previouslySelectedItem = ItemsListBox.SelectedItem as Item;
+
+            string searchText = FindTextBox.Text;
+            List<Item> result;
+
+            if (!string.IsNullOrEmpty(searchText))
             {
-                return;
+                result = DataTools.Filter(
+                    _items,
+                    item => item.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                result = new List<Item>(_items);
             }
 
-            ItemsListBox.Items.RemoveAt(selectedIndex);
-            ItemsListBox.Items.Insert(selectedIndex, _items[selectedIndex]);
-            ItemsListBox.SelectedIndex = selectedIndex;
-        }
+            switch (OrderByComboBox.SelectedIndex)
+            {
+                case 1:
+                    result = DataTools.Sort(result, DataTools.CompareByCostAscending);
+                    break;
+                case 2:
+                    result = DataTools.Sort(result, DataTools.CompareByCostDescending);
+                    break;
+                default:
+                    result = DataTools.Sort(result, DataTools.CompareByName);
+                    break;
+            }
 
-        private void ItemsAddBtn_Click(object sender, EventArgs e)
-        {
+            _displayedItems = result;
+
+            _isUpdatingControls = true;
             try
             {
-                Item item = new Item("Новый товар", "Описание товара", 0, Category.Electronics);
+                ItemsListBox.Items.Clear();
+                foreach (Item item in _displayedItems)
+                {
+                    ItemsListBox.Items.Add(item);
+                }
 
-                _items.Add(item);
-                ItemsListBox.Items.Add(item);
-                ItemsListBox.SelectedItem = item;
+                if (previouslySelectedItem != null)
+                {
+                    int index = _displayedItems.IndexOf(previouslySelectedItem);
+                    if (index >= 0)
+                    {
+                        ItemsListBox.SelectedIndex = index;
+                    }
+                    else
+                    {
+                        ClearSelectedItemFields();
+                    }
+                }
+                else
+                {
+                    ClearSelectedItemFields();
+                }
             }
-            catch (ArgumentException exception)
+            finally
             {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _isUpdatingControls = false;
             }
+        }
+
+        private void ClearSelectedItemFields()
+        {
+            IDItemTextBox.Clear();
+            CostItemTextBox.Clear();
+            CostItemTextBox.BackColor = Color.White;
+            NameItemTextBox.Clear();
+            NameItemTextBox.BackColor = Color.White;
+            DescriptionItemTextBox.Clear();
+            DescriptionItemTextBox.BackColor = Color.White;
+
+            if (CategoryComboBox.Items.Count > 0)
+            {
+                CategoryComboBox.SelectedIndex = 0;
+            }
+        }
+
+        private void FillSelectedItemFields(Item item)
+        {
+            _isUpdatingControls = true;
+            try
+            {
+                IDItemTextBox.Text = item.Id.ToString();
+                CostItemTextBox.Text = item.Cost.ToString();
+                CostItemTextBox.BackColor = Color.White;
+                CategoryComboBox.SelectedItem = item.Category;
+                NameItemTextBox.Text = item.Name;
+                NameItemTextBox.BackColor = Color.White;
+                DescriptionItemTextBox.Text = item.Info;
+                DescriptionItemTextBox.BackColor = Color.White;
+            }
+            finally
+            {
+                _isUpdatingControls = false;
+            }
+        }
+
+        private void FindTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateDisplayedItems();
+        }
+
+        private void OrderByComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateDisplayedItems();
         }
 
         private void ItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem is not Item item)
+            if (_isUpdatingControls)
             {
                 return;
             }
 
-            IDTextBox.Text = item.Id.ToString();
-            NameTextBox.Text = item.Name;
-            InfoTextBox.Text = item.Info;
-            CostTextBox.Text = item.Cost.ToString();
-            CategoryComboBox.SelectedItem = item.Category;
+            if (ItemsListBox.SelectedItem is not Item selectedItem)
+            {
+                ClearSelectedItemFields();
+                return;
+            }
+
+            FillSelectedItemFields(selectedItem);
         }
 
-        private void NameTextBox_Leave(object sender, EventArgs e)
+        private void AddItemBtn_Click(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem is not Item item)
-            {
-                return;
-            }
-
             try
             {
-                item.Name = NameTextBox.Text;
-                RefreshSelectedItem();
+                Item newItem = new Item("Новый товар", "Описание товара", 100.0, Category.Electronics);
+                _items.Add(newItem);
+
+                UpdateDisplayedItems();
+
+                int newIndex = _displayedItems.IndexOf(newItem);
+                if (newIndex >= 0)
+                {
+                    ItemsListBox.SelectedIndex = newIndex;
+                }
             }
             catch (ArgumentException exception)
             {
                 MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                NameTextBox.Text = item.Name;
             }
         }
 
-        private void InfoTextBox_Leave(object sender, EventArgs e)
+        private void RemoveItemBtn_Click(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem is not Item item)
-            {
-                return;
-            }
-
-            try
-            {
-                item.Info = InfoTextBox.Text;
-                RefreshSelectedItem();
-            }
-            catch (ArgumentException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                InfoTextBox.Text = item.Info;
-            }
-        }
-
-        private void CostTextBox_Leave(object sender, EventArgs e)
-        {
-            if (ItemsListBox.SelectedItem is not Item item)
-            {
-                return;
-            }
-
-            try
-            {
-                double cost = double.Parse(CostTextBox.Text);
-                item.Cost = cost;
-                RefreshSelectedItem();
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Стоимость должна быть числом.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                CostTextBox.Text = item.Cost.ToString();
-            }
-            catch (ArgumentException exception)
-            {
-                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                CostTextBox.Text = item.Cost.ToString();
-            }
-        }
-
-        private void ItemsRemoveBtn_Click(object sender, EventArgs e)
-        {
-            if (ItemsListBox.SelectedItem is not Item item)
+            if (ItemsListBox.SelectedItem is not Item selectedItem)
             {
                 MessageBox.Show("Выберите товар для удаления.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            _items.Remove(item);
-            ItemsListBox.Items.Remove(item);
-
-            IDTextBox.Clear();
-            NameTextBox.Clear();
-            InfoTextBox.Clear();
-            CostTextBox.Clear();
-            CategoryComboBox.SelectedIndex = -1;
-
-            NameTextBox.BackColor = Color.White;
-            InfoTextBox.BackColor = Color.White;
-            CostTextBox.BackColor = Color.White;
+            _items.Remove(selectedItem);
+            UpdateDisplayedItems();
         }
 
-        private void NameTextBox_TextChanged(object sender, EventArgs e)
+        private void CostItemTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem == null)
+            if (_isUpdatingControls || ItemsListBox.SelectedItem == null)
             {
-                NameTextBox.BackColor = Color.White;
+                CostItemTextBox.BackColor = Color.White;
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(NameTextBox.Text) || NameTextBox.Text.Length > 200)
+            if (!double.TryParse(CostItemTextBox.Text, out double cost) || cost < 0 || cost > 100000)
             {
-                NameTextBox.BackColor = Color.LightPink;
+                CostItemTextBox.BackColor = Color.LightPink;
             }
             else
             {
-                NameTextBox.BackColor = Color.White;
+                CostItemTextBox.BackColor = Color.White;
             }
         }
 
-        private void InfoTextBox_TextChanged(object sender, EventArgs e)
+        private void CostItemTextBox_Leave(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem == null)
+            if (_isUpdatingControls || ItemsListBox.SelectedItem is not Item selectedItem)
             {
-                InfoTextBox.BackColor = Color.White;
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(InfoTextBox.Text) || InfoTextBox.Text.Length > 1000)
+            try
             {
-                InfoTextBox.BackColor = Color.LightPink;
-            }
-            else
-            {
-                InfoTextBox.BackColor = Color.White;
-            }
-        }
+                if (!double.TryParse(CostItemTextBox.Text, out double cost))
+                {
+                    throw new ArgumentException("Введите корректную стоимость товара.");
+                }
 
-        private void CostTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ItemsListBox.SelectedItem == null)
-            {
-                CostTextBox.BackColor = Color.White;
-                return;
+                selectedItem.Cost = cost;
+                UpdateDisplayedItems();
             }
-
-            if (!double.TryParse(CostTextBox.Text, out double cost) || cost < 0 || cost > 100000)
+            catch (ArgumentException exception)
             {
-                CostTextBox.BackColor = Color.LightPink;
-            }
-            else
-            {
-                CostTextBox.BackColor = Color.White;
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CostItemTextBox.Text = selectedItem.Cost.ToString();
             }
         }
 
         private void CategoryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ItemsListBox.SelectedItem is Item item &&
-                CategoryComboBox.SelectedItem is Category category)
+            if (_isUpdatingControls || ItemsListBox.SelectedItem is not Item selectedItem)
             {
-                item.Category = category;
+                return;
+            }
+
+            if (CategoryComboBox.SelectedItem is Category category)
+            {
+                selectedItem.Category = category;
+            }
+        }
+
+        private void NameItemTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_isUpdatingControls || ItemsListBox.SelectedItem == null)
+            {
+                NameItemTextBox.BackColor = Color.White;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NameItemTextBox.Text) || NameItemTextBox.Text.Length > 200)
+            {
+                NameItemTextBox.BackColor = Color.LightPink;
+            }
+            else
+            {
+                NameItemTextBox.BackColor = Color.White;
+            }
+        }
+
+        private void NameItemTextBox_Leave(object sender, EventArgs e)
+        {
+            if (_isUpdatingControls || ItemsListBox.SelectedItem is not Item selectedItem)
+            {
+                return;
+            }
+
+            try
+            {
+                selectedItem.Name = NameItemTextBox.Text;
+                UpdateDisplayedItems();
+            }
+            catch (ArgumentException exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                NameItemTextBox.Text = selectedItem.Name;
+            }
+        }
+
+        private void DescriptionItemTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_isUpdatingControls || ItemsListBox.SelectedItem == null)
+            {
+                DescriptionItemTextBox.BackColor = Color.White;
+                return;
+            }
+
+            if (DescriptionItemTextBox.Text.Length > 1000)
+            {
+                DescriptionItemTextBox.BackColor = Color.LightPink;
+            }
+            else
+            {
+                DescriptionItemTextBox.BackColor = Color.White;
+            }
+        }
+
+        private void DescriptionItemTextBox_Leave(object sender, EventArgs e)
+        {
+            if (_isUpdatingControls || ItemsListBox.SelectedItem is not Item selectedItem)
+            {
+                return;
+            }
+
+            try
+            {
+                selectedItem.Info = DescriptionItemTextBox.Text;
+            }
+            catch (ArgumentException exception)
+            {
+                MessageBox.Show(exception.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DescriptionItemTextBox.Text = selectedItem.Info;
             }
         }
     }
