@@ -16,6 +16,11 @@ namespace ObjectOrientedPractics.Model
         private string _apartment = string.Empty;
 
         /// <summary>
+        /// Событие, возникающее при изменении любого из свойств адреса доставки.
+        /// </summary>
+        public event EventHandler<EventArgs>? AddressChanged;
+
+        /// <summary>
         /// Возвращает и задает почтовый индекс (шестизначное целое число).
         /// </summary>
         public int Index
@@ -28,7 +33,11 @@ namespace ObjectOrientedPractics.Model
                     throw new ArgumentException("Почтовый индекс должен быть шестизначным числом.");
                 }
 
-                _index = value;
+                if (_index != value)
+                {
+                    _index = value;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -40,8 +49,14 @@ namespace ObjectOrientedPractics.Model
             get { return _country; }
             set
             {
-                ValueValidator.AssertStringOnLength(value ?? string.Empty, 50, nameof(Country));
-                _country = value ?? string.Empty;
+                string newCountry = value ?? string.Empty;
+                ValueValidator.AssertStringOnLength(newCountry, 50, nameof(Country));
+
+                if (_country != newCountry)
+                {
+                    _country = newCountry;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -53,8 +68,14 @@ namespace ObjectOrientedPractics.Model
             get { return _city; }
             set
             {
-                ValueValidator.AssertStringOnLength(value ?? string.Empty, 50, nameof(City));
-                _city = value ?? string.Empty;
+                string newCity = value ?? string.Empty;
+                ValueValidator.AssertStringOnLength(newCity, 50, nameof(City));
+
+                if (_city != newCity)
+                {
+                    _city = newCity;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -66,8 +87,14 @@ namespace ObjectOrientedPractics.Model
             get { return _street; }
             set
             {
-                ValueValidator.AssertStringOnLength(value ?? string.Empty, 100, nameof(Street));
-                _street = value ?? string.Empty;
+                string newStreet = value ?? string.Empty;
+                ValueValidator.AssertStringOnLength(newStreet, 100, nameof(Street));
+
+                if (_street != newStreet)
+                {
+                    _street = newStreet;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -79,8 +106,14 @@ namespace ObjectOrientedPractics.Model
             get { return _building; }
             set
             {
-                ValueValidator.AssertStringOnLength(value ?? string.Empty, 10, nameof(Building));
-                _building = value ?? string.Empty;
+                string newBuilding = value ?? string.Empty;
+                ValueValidator.AssertStringOnLength(newBuilding, 10, nameof(Building));
+
+                if (_building != newBuilding)
+                {
+                    _building = newBuilding;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -92,8 +125,14 @@ namespace ObjectOrientedPractics.Model
             get { return _apartment; }
             set
             {
-                ValueValidator.AssertStringOnLength(value ?? string.Empty, 10, nameof(Apartment));
-                _apartment = value ?? string.Empty;
+                string newApartment = value ?? string.Empty;
+                ValueValidator.AssertStringOnLength(newApartment, 10, nameof(Apartment));
+
+                if (_apartment != newApartment)
+                {
+                    _apartment = newApartment;
+                    AddressChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 

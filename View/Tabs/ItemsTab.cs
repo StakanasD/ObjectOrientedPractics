@@ -10,13 +10,18 @@ using ObjectOrientedPractics.Services;
 namespace ObjectOrientedPractics.View.Tabs
 {
     /// <summary>
-    /// Вкладка управления товарами магазина с поддержкой поиска и сортировки через делегаты.
+    /// Вкладка управления товарами магазина с поддержкой поиска, сортировки и уведомления об изменениях.
     /// </summary>
     public partial class ItemsTab : UserControl
     {
         private List<Item> _items = new List<Item>();
         private List<Item> _displayedItems = new List<Item>();
         private bool _isUpdatingControls;
+
+        /// <summary>
+        /// Событие, возникающее при добавлении, удалении или редактировании товара.
+        /// </summary>
+        public event EventHandler<EventArgs>? ItemsChanged;
 
         /// <summary>
         /// Возвращает и задает общий список товаров магазина.
@@ -189,6 +194,8 @@ namespace ObjectOrientedPractics.View.Tabs
                 {
                     ItemsListBox.SelectedIndex = newIndex;
                 }
+
+                ItemsChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (ArgumentException exception)
             {
@@ -206,6 +213,7 @@ namespace ObjectOrientedPractics.View.Tabs
 
             _items.Remove(selectedItem);
             UpdateDisplayedItems();
+            ItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CostItemTextBox_TextChanged(object sender, EventArgs e)
@@ -240,8 +248,12 @@ namespace ObjectOrientedPractics.View.Tabs
                     throw new ArgumentException("Введите корректную стоимость товара.");
                 }
 
-                selectedItem.Cost = cost;
-                UpdateDisplayedItems();
+                if (!selectedItem.Cost.Equals(cost))
+                {
+                    selectedItem.Cost = cost;
+                    UpdateDisplayedItems();
+                    ItemsChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             catch (ArgumentException exception)
             {
@@ -257,9 +269,10 @@ namespace ObjectOrientedPractics.View.Tabs
                 return;
             }
 
-            if (CategoryComboBox.SelectedItem is Category category)
+            if (CategoryComboBox.SelectedItem is Category category && selectedItem.Category != category)
             {
                 selectedItem.Category = category;
+                ItemsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -290,8 +303,12 @@ namespace ObjectOrientedPractics.View.Tabs
 
             try
             {
-                selectedItem.Name = NameItemTextBox.Text;
-                UpdateDisplayedItems();
+                if (selectedItem.Name != NameItemTextBox.Text)
+                {
+                    selectedItem.Name = NameItemTextBox.Text;
+                    UpdateDisplayedItems();
+                    ItemsChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             catch (ArgumentException exception)
             {
@@ -327,7 +344,12 @@ namespace ObjectOrientedPractics.View.Tabs
 
             try
             {
-                selectedItem.Info = DescriptionItemTextBox.Text;
+                string newInfo = DescriptionItemTextBox.Text ?? string.Empty;
+                if (selectedItem.Info != newInfo)
+                {
+                    selectedItem.Info = newInfo;
+                    ItemsChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             catch (ArgumentException exception)
             {

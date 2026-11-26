@@ -1,4 +1,6 @@
 ﻿using ObjectOrientedPractics.Model;
+using System;
+using System.Windows.Forms;
 
 namespace ObjectOrientedPractics
 {
@@ -27,22 +29,20 @@ namespace ObjectOrientedPractics
 
             ordersTab1.Customers = _store.Customers;
             ordersTab1.RefreshData();
+
+            tabControl1.SelectedIndexChanged -= tabControl1_SelectedIndexChanged;
+            itemsTab1.ItemsChanged += ItemsTab1_ItemsChanged;
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ItemsTab1_ItemsChanged(object? sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 1)
-            {
-                customerTab1.RefreshDiscounts();
-            }
-            else if (tabControl1.SelectedIndex == 2)
-            {
-                cartsTab1.RefreshData();
-            }
-            else if (tabControl1.SelectedIndex == 3)
-            {
-                ordersTab1.RefreshData();
-            }
+            cartsTab1.RefreshData();
+            ordersTab1.RefreshData();
+            customerTab1.RefreshDiscounts();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object? sender, EventArgs e)
+        {
         }
     }
 }
